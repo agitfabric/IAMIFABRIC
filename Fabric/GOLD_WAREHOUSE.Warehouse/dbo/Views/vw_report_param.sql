@@ -1,0 +1,4 @@
+-- Auto Generated (Do not modify) 078D298E583D1B0C29F9C4CD5F1F01DDCA43E9C85CF6F4A6DC470BB176EAF43A
+CREATE VIEW [dbo].[vw_report_param]
+AS
+SELECT CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE() - 2), 0) AS Date) AS FirstDayMonth, CAST(DATEADD(dd, - 1, DATEADD(yy, DATEDIFF(yy, 0, GETDATE()) + 1, 0)) AS Date) AS LastDayYear, CAST(GETDATE() - 2 AS Date) AS DaysBefore

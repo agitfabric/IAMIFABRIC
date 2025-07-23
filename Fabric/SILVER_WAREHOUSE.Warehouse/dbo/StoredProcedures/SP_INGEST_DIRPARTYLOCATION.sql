@@ -1,0 +1,6 @@
+CREATE procedure SP_INGEST_DIRPARTYLOCATION AS
+DELETE FROM SILVER_WAREHOUSE.dbo.DirPartyLocation
+WHERE RecordId  IN (SELECT RecordId FROM BRONZE_LAKEHOUSE.dbo.temp_DirPartyLocation)
+
+INSERT INTO SILVER_WAREHOUSE.dbo.DirPartyLocation
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_DirPartyLocation Order by ModifiedDateTime1

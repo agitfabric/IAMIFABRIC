@@ -1,0 +1,6 @@
+CREATE PROCEDURE SP_INGEST_POSITIONDETAILS as
+DELETE FROM SILVER_WAREHOUSE.dbo.PositionDetails
+ WHERE RecordId  IN (SELECT RecordId FROM BRONZE_LAKEHOUSE.dbo.temp_PositionDetails )
+
+INSERT INTO PositionDetails
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_PositionDetails Order by ModifiedDateTime1

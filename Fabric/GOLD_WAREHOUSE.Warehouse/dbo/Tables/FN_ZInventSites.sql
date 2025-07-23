@@ -1,0 +1,27 @@
+CREATE TABLE [dbo].[FN_ZInventSites] (
+
+	[AMDeviceAccessoryInventLocation] varchar(8000) NULL, 
+	[AreaCode] varchar(8000) NULL, 
+	[dataAreaId] varchar(8000) NULL, 
+	[DefaultInventStatusId] varchar(8000) NULL, 
+	[IsReceivingWarehouseOverrideAllowed] varchar(8000) NULL, 
+	[ModifiedDateTime1] datetime2(6) NULL, 
+	[Name] varchar(8000) NULL, 
+	[OrderEntryDeadlineGroupId] varchar(8000) NULL, 
+	[RecordId] bigint NULL, 
+	[SiteId] varchar(8000) NULL, 
+	[TaxBranchRefRecId] bigint NULL, 
+	[Timezone] varchar(8000) NULL, 
+	[Z1S] varchar(8000) NULL, 
+	[Z3S] varchar(8000) NULL, 
+	[ZDealerAfterSales] varchar(8000) NULL, 
+	[ZDealerSales] varchar(8000) NULL, 
+	[ZDeletionFlag] varchar(8000) NULL, 
+	[ZIAMIArea] varchar(8000) NULL, 
+	[ZIAMIAreas] varchar(8000) NULL, 
+	[ZNPWP] varchar(8000) NULL, 
+	[ZNPWPAfterSales] varchar(8000) NULL, 
+	[ZProvinsi] varchar(8000) NULL, 
+	[ZTelp] varchar(8000) NULL, 
+	[Last_update] datetime2(6) NULL
+);

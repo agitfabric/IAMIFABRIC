@@ -1,0 +1,306 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": {
+              "value": "@concat(\n  'DECLARE @today NVARCHAR(10) = CONVERT(VARCHAR, GETDATE(), 23); ',\n  'DECLARE @maxupdated NVARCHAR(10) = ''', variables('maxdate'), '''; ',\n  'EXEC GetSDAForPowerBI ',\n  '@StartDate = @maxupdated, ',\n  '@EndDate = @today, ',\n  '@SiteCode = '''', ',\n  '@DealerType = 1','WITH RESULT SETS(\n(\n    SupportDealerID nvarchar(50) not null\n   ,SDANumber  nvarchar(50) null\n   ,BranchCode int null\n   ,SiteCode nvarchar(10) null\n   ,CreatedDate datetime null\n   ,UpdatedDate datetime null\n   ,SDADate datetime null\n   ,IsDeleted int null\n   ,CreatedBy nvarchar(50) null\n   ,CreatedOn nvarchar(50) null\n   ,UpdatedBy nvarchar(50) null\n   ,UpdatedOn datetime null\n))'\n)\n",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "Last_update",
+                "value": {
+                  "value": "@formatDateTime(addHours(utcNow(), 7), 'yyyy-MM-dd HH:mm:ss')",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "database": "PowerBINonSAP"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "4a610ece-0e32-46fd-8611-c3ba53b9f48b"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "TabelSDA"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE_154_NONSAP",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "070b85fb-8802-8bb6-4995-104e333fa733",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "SupportDealerID",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "SupportDealerID",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "SDANumber",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "SDANumber",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "BranchCode",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "BranchCode",
+                  "physicalType": "integer"
+                }
+              },
+              {
+                "source": {
+                  "name": "SiteCode",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "10"
+                },
+                "sink": {
+                  "name": "SiteCode",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedDate",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "CreatedDate",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "UpdatedDate",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "UpdatedDate",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "SDADate",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "SDADate",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "IsDeleted",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "IsDeleted",
+                  "physicalType": "integer"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedBy",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "CreatedBy",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedOn",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "CreatedOn",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "UpdatedBy",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "UpdatedBy",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "UpdatedOn",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "UpdatedOn",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "Last_update",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "Last_update",
+                  "physicalType": "timestamp"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "TabelSDA",
+        "dependsOn": [
+          {
+            "activity": "Set variable maxdate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "select left(convert(varchar,max(UpdatedOn),20),10) as md from TabelSDA go",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "maxdate",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "maxdate",
+          "value": {
+            "value": "@activity('maxdate').output.firstRow.md",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set variable maxdate",
+        "dependsOn": [
+          {
+            "activity": "maxdate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "maxdate": {
+        "type": "String",
+        "defaultValue": "2024-01-01"
+      }
+    }
+  }
+}

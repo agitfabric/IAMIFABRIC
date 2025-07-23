@@ -1,0 +1,6 @@
+CREATE PROCEDURE SP_INGEST_SPAREPART_PURCHASEORDERPART AS
+TRUNCATE TABLE SILVER_WAREHOUSE.dbo.sparepart_purchaseOrderPart
+insert into SILVER_WAREHOUSE.dbo.sparepart_purchaseOrderPart
+select * from BRONZE_LAKEHOUSE_PSS.dbo.sparepart_purchaseOrderPart
+
+--select * into SILVER_WAREHOUSE.dbo.sparepart_purchaseOrderPart from BRONZE_LAKEHOUSE_PSS.dbo.sparepart_purchaseOrderPart

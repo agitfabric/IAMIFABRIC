@@ -1,0 +1,6 @@
+CREATE procedure SP_INGEST_DIRPERSONBASEENTITY AS
+DELETE FROM SILVER_WAREHOUSE.dbo.DirPersonBaseEntity
+WHERE RecordId IN (SELECT RecordId FROM BRONZE_LAKEHOUSE.dbo.temp_DirPersonBaseEntity)
+
+INSERT INTO SILVER_WAREHOUSE.dbo.DirPersonBaseEntity
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_DirPersonBaseEntity Order by ModifiedDateTime1

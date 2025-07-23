@@ -1,0 +1,25 @@
+CREATE TABLE [dbo].[temp_AMInventDemandTrans] (
+
+	[AvailPhysical] float NULL, 
+	[AvailPhysicalLocation] float NULL, 
+	[CreatedDateTime1] datetime2(6) NULL, 
+	[CustAccount] varchar(8000) NULL, 
+	[dataAreaId] varchar(8000) NULL, 
+	[DemandNeeded] varchar(8000) NULL, 
+	[DemandOrigin] varchar(8000) NULL, 
+	[DemandType] varchar(8000) NULL, 
+	[InventDimId] varchar(8000) NULL, 
+	[ItemId] varchar(8000) NULL, 
+	[ModifiedDateTime1] datetime2(6) NULL, 
+	[QtyDemanded] float NULL, 
+	[Reason] varchar(8000) NULL, 
+	[TransDate] datetime2(6) NULL, 
+	[Worker] bigint NULL, 
+	[ZPosted] varchar(8000) NULL, 
+	[ZReasonId] varchar(8000) NULL, 
+	[ZReasonNote] varchar(8000) NULL, 
+	[ZTransactionNumber] varchar(8000) NULL, 
+	[ZTransactionType] varchar(8000) NULL, 
+	[RecordId] bigint NULL, 
+	[Last_update] datetime2(6) NULL
+);

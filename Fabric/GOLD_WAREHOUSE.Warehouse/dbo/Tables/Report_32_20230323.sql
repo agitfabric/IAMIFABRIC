@@ -1,0 +1,25 @@
+CREATE TABLE [dbo].[Report_32_20230323] (
+
+	[VendorID] varchar(8000) NULL, 
+	[Vendor_Name] varchar(8000) NULL, 
+	[PO_Date] date NULL, 
+	[PurchID] varchar(8000) NULL, 
+	[DealerCategory] varchar(8000) NULL, 
+	[Dealer] varchar(8000) NULL, 
+	[Nama_Dealer] varchar(8000) NULL, 
+	[Outlet] varchar(8000) NULL, 
+	[Nama_outlet] varchar(8000) NULL, 
+	[StatusPO] varchar(8000) NULL, 
+	[Part_Number] varchar(8000) NULL, 
+	[Part_Name] varchar(8000) NULL, 
+	[Qty_PO] float NULL, 
+	[InvoiceId] varchar(8000) NULL, 
+	[Origpurchid] varchar(8000) NULL, 
+	[PurchaseLineLineNumber] bigint NULL, 
+	[Qty_Invoice_GR] float NULL, 
+	[Invoice_Date] datetime2(6) NULL, 
+	[GR_Date] datetime2(6) NULL, 
+	[Description] varchar(8000) NULL, 
+	[Area] varchar(8000) NULL, 
+	[Last_update] datetime2(6) NULL
+);

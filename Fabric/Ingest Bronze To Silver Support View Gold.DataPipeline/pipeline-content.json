@@ -1,0 +1,96 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Search Variable SP",
+        "type": "Lookup",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT name \nFROM sys.procedures \nWHERE name IN (\n    'SP_INGEST_SALESTABLE',\n    'SP_INGEST_CASELOGHISTORY',\n    'SP_INGEST_GROUPLINE',\n    'SP_INGEST_TARGETUNITSERVED',\n    'SP_INGEST_ZAISITES',\n    'SP_INGEST_REPORTFORMAT',\n    'SP_INGEST_SALESJENJANG',\n    'SP_INGEST_REPORT_35_CLASSIFICATION',\n    'SP_INGEST_Report_53_BM',\n    'SP_INGEST_Report_52_Resource',\n    'SP_INGEST_Report_52_Trans'\n)",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None"
+          },
+          "firstRowOnly": false,
+          "datasetSettings": {
+            "annotations": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "annotations": [],
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                }
+              }
+            },
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "typeProperties": {}
+          }
+        }
+      },
+      {
+        "name": "ForEach1",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "Search Variable SP",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Search Variable SP').output.value",
+            "type": "Expression"
+          },
+          "isSequential": true,
+          "activities": [
+            {
+              "name": "Exec Variable SP",
+              "type": "SqlServerStoredProcedure",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "storedProcedureName": {
+                  "value": "@item().name",
+                  "type": "Expression"
+                }
+              },
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "test if condition pipeline"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "702efeb3-bc5d-894b-4076-dcd9a38915b1"
+  }
+}

@@ -1,0 +1,27 @@
+CREATE TABLE [dbo].[Report_35_Monthly_202302] (
+
+	[EstDate] date NULL, 
+	[RunningDate] varchar(8000) NULL, 
+	[DataAreaId] varchar(8000) NULL, 
+	[Outlet] varchar(8000) NULL, 
+	[Warehouse] varchar(8000) NULL, 
+	[ItemId] varchar(8000) NULL, 
+	[Description] varchar(8000) NULL, 
+	[ABCCode] varchar(8000) NULL, 
+	[ABCClassification] varchar(8000) NULL, 
+	[StockQty] float NULL, 
+	[StockAmount] float NULL, 
+	[StdCost] float NULL, 
+	[StockLevel] float NULL, 
+	[FD] float NULL, 
+	[POQty] float NULL, 
+	[POAmount] float NULL, 
+	[SOQty] float NULL, 
+	[SOAmount] float NULL, 
+	[SalesQtyMTD] float NULL, 
+	[SalesAmountMTD] float NULL, 
+	[COGS] float NULL, 
+	[AvgSales6mth] float NULL, 
+	[AvgCogs6mth] float NULL, 
+	[Sortby] varchar(8000) NULL
+);

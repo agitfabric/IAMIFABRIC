@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[Report_34_CR] (
+
+	[Customer_ID] varchar(8000) NULL, 
+	[Customer_Name] varchar(8000) NULL, 
+	[SO/PKB_No] varchar(8000) NULL, 
+	[PKB_No] varchar(8000) NULL, 
+	[SalesOrderPoolId] varchar(8000) NULL, 
+	[InvoiceId] varchar(8000) NULL, 
+	[SO/PKB_Date] date NULL, 
+	[Tipe] varchar(8000) NULL, 
+	[ItemGroupId] varchar(8000) NULL, 
+	[Part_number] varchar(8000) NULL, 
+	[Part_Name] varchar(8000) NULL, 
+	[SalesQty] float NULL, 
+	[Qty] float NULL, 
+	[Amount] float NULL, 
+	[Invoice_Date] date NULL, 
+	[Kode_Dealer] varchar(8000) NULL, 
+	[Dealer] varchar(8000) NULL, 
+	[Kode_Outlet] varchar(8000) NULL, 
+	[Outlet] varchar(8000) NULL, 
+	[Area] varchar(8000) NULL, 
+	[Remarks] varchar(8000) NULL, 
+	[DealerCategory] varchar(8000) NULL, 
+	[Last_Update] datetime2(6) NULL
+);

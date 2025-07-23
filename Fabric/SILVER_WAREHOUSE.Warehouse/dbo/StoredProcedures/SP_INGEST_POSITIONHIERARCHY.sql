@@ -1,0 +1,6 @@
+CREATE PROCEDURE SP_INGEST_POSITIONHIERARCHY as
+DELETE FROM SILVER_WAREHOUSE.dbo.PositionHierarchy
+ WHERE RecordId  IN (SELECT RecordId FROM BRONZE_LAKEHOUSE.dbo.temp_PositionHierarchy )
+
+INSERT INTO SILVER_WAREHOUSE.dbo.PositionHierarchy
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_PositionHierarchy Order by ModifiedDateTime1

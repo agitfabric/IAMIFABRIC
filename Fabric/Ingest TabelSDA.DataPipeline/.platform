@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest TabelSDA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f5507386-ccf9-9318-459c-832d33b1df36"
+  }
+}

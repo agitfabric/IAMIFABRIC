@@ -1,0 +1,27 @@
+CREATE TABLE [dbo].[Report_44_DatabyOutlet] (
+
+	[Dates] varchar(8000) NULL, 
+	[Outlet] varchar(8000) NULL, 
+	[JumlahHariKerja] int NULL, 
+	[JamTersedia] int NULL, 
+	[JumlahMekanik] int NULL, 
+	[JamTerjual] float NULL, 
+	[CustomerAll] int NULL, 
+	[CustomerContract] int NULL, 
+	[HJNSER] float NULL, 
+	[HJFSER] float NULL, 
+	[HJPSER] float NULL, 
+	[HJTBSER] float NULL, 
+	[HJTFSER] float NULL, 
+	[HJBISON] float NULL, 
+	[HJCESER] float NULL, 
+	[HJFGSER] float NULL, 
+	[HJKSCG] float NULL, 
+	[HJLTSER] float NULL, 
+	[HJUCSER] float NULL, 
+	[JumlahStall] int NULL, 
+	[JumlahBIB] int NULL, 
+	[RevenuePartNotaKontan] float NULL, 
+	[RevenuePartNotaKontanDirect] float NULL, 
+	[JamAktual] int NULL
+);

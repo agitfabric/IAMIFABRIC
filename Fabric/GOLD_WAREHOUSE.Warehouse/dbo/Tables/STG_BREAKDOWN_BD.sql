@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[STG_BREAKDOWN_BD] (
+
+	[Tahun] varchar(8000) NULL, 
+	[Bulan] varchar(8000) NULL, 
+	[Subject] varchar(8000) NULL, 
+	[TglUpdate] varchar(8000) NULL, 
+	[Model] varchar(8000) NULL, 
+	[Series] varchar(8000) NULL, 
+	[Area] varchar(8000) NULL, 
+	[ReasonReject] varchar(8000) NULL, 
+	[KategoriProblem] varchar(8000) NULL, 
+	[TypeSolving] varchar(8000) NULL, 
+	[Target2Hari] varchar(8000) NULL, 
+	[Target4Hari] varchar(8000) NULL, 
+	[KodeBengkel] varchar(8000) NULL, 
+	[Pareto] varchar(8000) NULL, 
+	[StatusTicket] varchar(8000) NULL, 
+	[TglSubmit] varchar(8000) NULL, 
+	[LeadTime] varchar(8000) NULL, 
+	[NoTicket] varchar(8000) NULL, 
+	[FieldAdvisor] varchar(8000) NULL, 
+	[VIN] varchar(8000) NULL, 
+	[Customer] varchar(8000) NULL, 
+	[interfaceid] varchar(8000) NULL, 
+	[date_update] varchar(8000) NULL
+);

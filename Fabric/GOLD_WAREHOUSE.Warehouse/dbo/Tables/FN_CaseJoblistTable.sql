@@ -1,0 +1,27 @@
+CREATE TABLE [dbo].[FN_CaseJoblistTable] (
+
+	[ActivityNumber] varchar(8000) NULL, 
+	[CauseCode] varchar(8000) NULL, 
+	[CreatedDateTime1] datetime2(6) NULL, 
+	[dataAreaId] varchar(8000) NULL, 
+	[Description] varchar(8000) NULL, 
+	[IsPriceSimApplied] varchar(8000) NULL, 
+	[JobListCode] varchar(8000) NULL, 
+	[JobListId] varchar(8000) NULL, 
+	[JobListRelation] varchar(8000) NULL, 
+	[JobListRelation1] varchar(8000) NULL, 
+	[JobListType] varchar(8000) NULL, 
+	[ModifiedDatetime1] datetime2(6) NULL, 
+	[Notes] varchar(8000) NULL, 
+	[OprRelation] varchar(8000) NULL, 
+	[OprRelationCode] varchar(8000) NULL, 
+	[OriginJobListId] varchar(8000) NULL, 
+	[RecordId] bigint NULL, 
+	[ResolutionCode] varchar(8000) NULL, 
+	[SymptomCode] varchar(8000) NULL, 
+	[UseForPDI] varchar(8000) NULL, 
+	[UseForSpecAdd] varchar(8000) NULL, 
+	[UseForSpecDelete] varchar(8000) NULL, 
+	[WorkCtrCapabilityName] varchar(8000) NULL, 
+	[Last_update] datetime2(6) NULL
+);

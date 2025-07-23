@@ -1,0 +1,129 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT TableName, SourceSchema, DestinationPath FROM MetadataTable where ScheduleCategory ='DS Fakpol'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup DS Fakpol",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lookup DS Fakpol').output.value\n",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "sqlReaderQuery": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}\n",
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "SqlServerTable",
+                    "typeProperties": {
+                      "database": "IAMI_PROD"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": "@item().TableName"
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "BRONZE_LAKEHOUSE",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy data1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Ingest DS Fakpol",
+        "dependsOn": [
+          {
+            "activity": "Lookup DS Fakpol",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

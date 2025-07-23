@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[KPI_Breakdown_Database_BD] (
+
+	[KodeBengkel] varchar(8000) NULL, 
+	[KodeOutlet] varchar(8000) NULL, 
+	[StatusTicket] varchar(8000) NULL, 
+	[TanggalSubmit] datetime2(6) NULL, 
+	[LeadTime] varchar(8000) NULL, 
+	[NoTicket] int NULL, 
+	[FieldAdvisor] varchar(8000) NULL, 
+	[Dealer] varchar(8000) NULL, 
+	[VIN] varchar(8000) NULL, 
+	[Customer] varchar(8000) NULL, 
+	[Subject] varchar(8000) NULL, 
+	[TanggalUpdate] datetime2(6) NULL, 
+	[Bulan] varchar(8000) NULL, 
+	[Tahun] varchar(8000) NULL, 
+	[Model] varchar(8000) NULL, 
+	[Series] varchar(8000) NULL, 
+	[Area] varchar(8000) NULL, 
+	[ReasonReject] varchar(8000) NULL, 
+	[KategoriProblem] varchar(8000) NULL, 
+	[TypeSolving] varchar(8000) NULL, 
+	[Target2Hari] varchar(8000) NULL, 
+	[Target4Hari] varchar(8000) NULL, 
+	[Pareto] varchar(8000) NULL
+);

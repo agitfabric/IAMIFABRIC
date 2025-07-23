@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pipeline Ingest To Bronze_Error Data"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ab3dce40-202b-be9f-470c-2234f8f26f8e"
+  }
+}

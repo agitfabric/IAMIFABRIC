@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[ZTempFakpol] (
+
+	[Dealer] varchar(8000) NULL, 
+	[KodeOutlet] varchar(8000) NULL, 
+	[TglEUS] varchar(8000) NULL, 
+	[NoEUS] float NULL, 
+	[Supervisor] varchar(8000) NULL, 
+	[Sales] varchar(8000) NULL, 
+	[Counter] varchar(8000) NULL, 
+	[NoSPK] float NULL, 
+	[NamaLengkap] varchar(8000) NULL, 
+	[Tipe] varchar(8000) NULL, 
+	[NamaProduk] varchar(8000) NULL, 
+	[Warna] varchar(8000) NULL, 
+	[NoMesin] varchar(8000) NULL, 
+	[NoRangka] varchar(8000) NULL, 
+	[NamaPerusahaanKredit] varchar(8000) NULL, 
+	[NoMesin1] varchar(8000) NULL, 
+	[CV / LCV] varchar(8000) NULL, 
+	[Series] varchar(8000) NULL, 
+	[SDAItemNumber] varchar(8000) NULL, 
+	[SegmentDescription] varchar(8000) NULL, 
+	[TypeDescription] varchar(8000) NULL, 
+	[NamaPerusahaan] varchar(8000) NULL, 
+	[JenisPerusahaan] varchar(8000) NULL
+);

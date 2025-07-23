@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Table Staging Abil Marketing"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "438479d6-3690-b14e-4111-bf0806a1244f"
+  }
+}

@@ -1,0 +1,5 @@
+CREATE PROCEDURE SP_INGEST_ZAISITES as
+drop table SILVER_WAREHOUSE.dbo.ZAISITES
+
+select * into ZAISITES from 
+(select * from BRONZE_LAKEHOUSE.dbo.ZAISITES) a

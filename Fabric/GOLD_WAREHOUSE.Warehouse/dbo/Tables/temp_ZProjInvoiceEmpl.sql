@@ -1,0 +1,27 @@
+CREATE TABLE [dbo].[temp_ZProjInvoiceEmpl] (
+
+	[ActivityNumber] varchar(8000) NULL, 
+	[CategoryId] varchar(8000) NULL, 
+	[CurrencyId] varchar(8000) NULL, 
+	[DataAreaId] varchar(8000) NULL, 
+	[EInvoiceAccountCode] varchar(8000) NULL, 
+	[InvoiceDate] datetime2(6) NULL, 
+	[LineAmount] float NULL, 
+	[ProjId] varchar(8000) NULL, 
+	[ProjInvoiceId] varchar(8000) NULL, 
+	[PSAContractLineNum] varchar(8000) NULL, 
+	[Qty] float NULL, 
+	[RecordId] bigint NULL, 
+	[Resource] bigint NULL, 
+	[ResourceCategory] bigint NULL, 
+	[ResourceLegalEntity] bigint NULL, 
+	[TaxAmount] float NULL, 
+	[TaxGroupId] varchar(8000) NULL, 
+	[TaxItemGroupId] varchar(8000) NULL, 
+	[TaxWriteCode] varchar(8000) NULL, 
+	[TransDate] datetime2(6) NULL, 
+	[TransId] varchar(8000) NULL, 
+	[Txt] varchar(8000) NULL, 
+	[Worker] bigint NULL, 
+	[WorkerLegalEntity] bigint NULL
+);

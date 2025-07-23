@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[Report_33_20221010] (
+
+	[InvoiceId] varchar(8000) NULL, 
+	[Tanggal_SO] datetime2(6) NULL, 
+	[Tanggal_Create] datetime2(6) NULL, 
+	[Customer_ID] varchar(8000) NULL, 
+	[Customer_Name] varchar(8000) NULL, 
+	[SO_no] varchar(8000) NULL, 
+	[LineNum] float NULL, 
+	[LineNum1] float NULL, 
+	[Part_number] varchar(8000) NULL, 
+	[Part_Name] varchar(8000) NULL, 
+	[Demand_Qty] float NULL, 
+	[Qty_Order] float NULL, 
+	[Qty_Lose] float NULL, 
+	[Availability] float NULL, 
+	[unit_price] float NULL, 
+	[Reason_ID] varchar(8000) NULL, 
+	[Reason_Note] varchar(8000) NULL, 
+	[Created_by] varchar(8000) NULL, 
+	[Dealer] varchar(8000) NULL, 
+	[Outlet] varchar(8000) NULL, 
+	[Outlet_Name] varchar(8000) NULL, 
+	[Area] varchar(8000) NULL, 
+	[Last_update] datetime2(6) NULL
+);

@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[Report_50_test] (
+
+	[Area] varchar(8000) NULL, 
+	[dataareaid] varchar(8000) NULL, 
+	[Dealer] varchar(8000) NULL, 
+	[Employee_Name] varchar(8000) NULL, 
+	[Group_Dealer] varchar(8000) NULL, 
+	[Kode_Outlet] varchar(8000) NULL, 
+	[Nama_Outlet] varchar(8000) NULL, 
+	[Name] varchar(8000) NULL, 
+	[PARENTPOSITION] bigint NULL, 
+	[PersonnelNumber] varchar(8000) NULL, 
+	[Position_id] bigint NULL, 
+	[Position_name] varchar(8000) NULL, 
+	[PositionHierarchy_Position] bigint NULL, 
+	[PWA_worker] bigint NULL, 
+	[RecordId] bigint NULL, 
+	[worker.Person1] bigint NULL, 
+	[worker2_Person1] bigint NULL, 
+	[ZDEPARTMENT] varchar(8000) NULL, 
+	[zhwt_TITLE] bigint NULL, 
+	[Title] varchar(8000) NULL, 
+	[Report_To_Position] bigint NULL, 
+	[Report_To_Employee_Name] varchar(8000) NULL, 
+	[Last_update] datetime2(6) NULL
+);

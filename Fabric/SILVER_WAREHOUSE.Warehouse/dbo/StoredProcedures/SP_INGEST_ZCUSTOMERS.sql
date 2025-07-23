@@ -1,0 +1,8 @@
+CREATE PROCEDURE SP_INGEST_ZCUSTOMERS AS
+DELETE a
+FROM SILVER_WAREHOUSE.dbo.ZCustomers a
+INNER JOIN BRONZE_LAKEHOUSE.dbo.temp_ZCustomers b ON b.AccountNum = a.AccountNum AND b.dataAreaId = a.dataAreaId
+
+
+INSERT INTO SILVER_WAREHOUSE.dbo.ZCustomers
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_ZCustomers

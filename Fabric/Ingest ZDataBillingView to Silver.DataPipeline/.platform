@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest ZDataBillingView to Silver"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "55015539-f005-bc47-4cda-6d6b0fb89ad0"
+  }
+}

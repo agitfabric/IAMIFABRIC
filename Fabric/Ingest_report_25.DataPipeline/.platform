@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest_report_25"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ae2be3f6-ca5e-9cd0-4025-e36dbf74326f"
+  }
+}

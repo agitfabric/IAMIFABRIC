@@ -1,0 +1,6 @@
+CREATE PROCEDURE SP_INGEST_ZCUSTINVOICETRANS AS
+DELETE FROM SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans
+where RecordId IN (select RecordId from BRONZE_LAKEHOUSE.dbo.temp_ZCustInvoiceTrans)
+
+INSERT INTO SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans
+SELECT * from BRONZE_LAKEHOUSE.dbo.temp_ZCustInvoiceTrans

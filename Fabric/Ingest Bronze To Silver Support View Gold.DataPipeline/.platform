@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest Bronze To Silver Support View Gold"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "93007ed8-c661-b0a5-4ef2-59c6b23c05e2"
+  }
+}

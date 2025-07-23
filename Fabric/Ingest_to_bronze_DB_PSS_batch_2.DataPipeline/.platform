@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest_to_bronze_DB_PSS_batch_2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8aa2c25a-9093-bc36-4433-94d3c4cacac7"
+  }
+}

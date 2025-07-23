@@ -1,0 +1,6 @@
+CREATE procedure SP_INGEST_HCMWORKERPRIMARYPOSITIONASSIGNMENTVIEW AS
+DELETE FROM SILVER_WAREHOUSE.dbo.HcmWorkerPrimaryPositionAssignmentView
+ WHERE RecordId  IN (SELECT RecordId FROM BRONZE_LAKEHOUSE.dbo.temp_HcmWorkerPrimaryPositionAssignmentView )
+
+INSERT INTO SILVER_WAREHOUSE.dbo.HcmWorkerPrimaryPositionAssignmentView
+SELECT * FROM BRONZE_LAKEHOUSE.dbo.temp_HcmWorkerPrimaryPositionAssignmentView Order by ModifiedDateTime1

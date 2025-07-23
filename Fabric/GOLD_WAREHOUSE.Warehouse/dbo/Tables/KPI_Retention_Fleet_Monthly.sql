@@ -1,0 +1,25 @@
+CREATE TABLE [dbo].[KPI_Retention_Fleet_Monthly] (
+
+	[Tahun] varchar(8000) NULL, 
+	[Bulan] varchar(8000) NULL, 
+	[Tanggal] date NULL, 
+	[Semester] varchar(8000) NULL, 
+	[Quarter] varchar(8000) NULL, 
+	[Code_Dealer] varchar(8000) NULL, 
+	[Code_Outlet] varchar(8000) NULL, 
+	[CodeMapping] varchar(8000) NULL, 
+	[Nama_Mapping] varchar(8000) NULL, 
+	[P] int NULL, 
+	[N] int NULL, 
+	[F] int NULL, 
+	[Target_Revenue] float NULL, 
+	[Revenue_Bengkel] float NULL, 
+	[Revenue_SO_Parts] float NULL, 
+	[Revenue_Total] float NULL, 
+	[RO_S1] int NULL, 
+	[RO_S2] int NULL, 
+	[RO_Total] int NULL, 
+	[UnitServed] int NULL, 
+	[PrimayKeyDealer] varchar(8000) NULL, 
+	[PrimayKeyOutlet] varchar(8000) NULL
+);

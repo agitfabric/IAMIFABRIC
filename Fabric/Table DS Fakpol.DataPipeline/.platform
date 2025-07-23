@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Table DS Fakpol"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "11452adb-1999-b41a-4c36-f2dcaa56150f"
+  }
+}

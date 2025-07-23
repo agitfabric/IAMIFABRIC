@@ -1,0 +1,4 @@
+create procedure SP_INGEST_DIRPARTYCONTACTINFOVIEW as
+delete from SILVER_WAREHOUSE.dbo.DirPartyContactInfoView 
+insert into SILVER_WAREHOUSE.dbo.DirPartyContactInfoView
+select * from BRONZE_LAKEHOUSE.dbo.DirPartyContactInfoView
