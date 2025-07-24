@@ -17915,6 +17915,72 @@
         ]
       },
       {
+        "name": "MetaDataTableRunningSP",
+        "sourceLineageTag": "[dbo].[MetaDataTableRunningSP]",
+        "columns": [
+          {
+            "name": "SPCategorcy",
+            "dataType": "string",
+            "sourceColumn": "SPCategorcy",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SPCategorcy",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SchduleCategory",
+            "dataType": "string",
+            "sourceColumn": "SchduleCategory",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SchduleCategory",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Step",
+            "dataType": "string",
+            "sourceColumn": "Step",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Step",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "MetaDataTableRunningSP",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
         "name": "MetadataTable",
         "sourceLineageTag": "[dbo].[MetadataTable]",
         "columns": [
