@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "UPDATE Staging_ABIL_Marketing"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "78e8e7a3-1935-8ae0-47d5-04164abccdd9"
+  }
+}

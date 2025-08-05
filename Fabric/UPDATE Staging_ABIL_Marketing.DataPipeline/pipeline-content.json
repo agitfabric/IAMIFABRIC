@@ -15,7 +15,7 @@
         "typeProperties": {
           "source": {
             "type": "DataWarehouseSource",
-            "sqlReaderQuery": "Select SPCategorcy as Name  from MetaDataTableRunningSP \nwhere SchduleCategory = 'DS Service'",
+            "sqlReaderQuery": "Select SPCategorcy as Name  from MetaDataTableRunningSP \nwhere SchduleCategory = 'Staging_ABIL_Marketing'",
             "queryTimeout": "02:00:00",
             "partitionOption": "None"
           },
