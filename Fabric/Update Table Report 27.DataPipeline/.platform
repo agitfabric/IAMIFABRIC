@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Update Table Report 27"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bfe0a690-0a71-89da-44de-b212c127f141"
+  }
+}

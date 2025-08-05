@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Update Table Daily Service"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8f17d003-b424-b713-409f-1496690bce2a"
+  }
+}
