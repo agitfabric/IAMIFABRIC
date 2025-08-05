@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Update Table Table Daily Staging"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d843f088-b0f4-9f9d-4919-4dfccc89f3f8"
+  }
+}
