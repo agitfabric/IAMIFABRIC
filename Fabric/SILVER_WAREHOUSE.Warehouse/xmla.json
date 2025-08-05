@@ -1171,6 +1171,45 @@
         ]
       },
       {
+        "name": "Calendar",
+        "sourceLineageTag": "[dbo].[Calendar]",
+        "columns": [
+          {
+            "name": "CalendarDate",
+            "dataType": "dateTime",
+            "sourceColumn": "CalendarDate",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "CalendarDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Calendar",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
         "name": "CaseLogHistory",
         "sourceLineageTag": "[dbo].[CaseLogHistory]",
         "columns": [
@@ -61921,6 +61960,360 @@
             "source": {
               "type": "entity",
               "entityName": "ZSalesOrderLine",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "ZTempFakpol",
+        "sourceLineageTag": "[dbo].[ZTempFakpol]",
+        "columns": [
+          {
+            "name": "Dealer",
+            "dataType": "string",
+            "sourceColumn": "Dealer",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Dealer",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "KodeOutlet",
+            "dataType": "string",
+            "sourceColumn": "KodeOutlet",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "KodeOutlet",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TglEUS",
+            "dataType": "string",
+            "sourceColumn": "TglEUS",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TglEUS",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NoEUS",
+            "dataType": "double",
+            "sourceColumn": "NoEUS",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "NoEUS",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "Supervisor",
+            "dataType": "string",
+            "sourceColumn": "Supervisor",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Supervisor",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Sales",
+            "dataType": "string",
+            "sourceColumn": "Sales",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Sales",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Counter",
+            "dataType": "string",
+            "sourceColumn": "Counter",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Counter",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NoSPK",
+            "dataType": "double",
+            "sourceColumn": "NoSPK",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "NoSPK",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "NamaLengkap",
+            "dataType": "string",
+            "sourceColumn": "NamaLengkap",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NamaLengkap",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Tipe",
+            "dataType": "string",
+            "sourceColumn": "Tipe",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Tipe",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NamaProduk",
+            "dataType": "string",
+            "sourceColumn": "NamaProduk",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NamaProduk",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Warna",
+            "dataType": "string",
+            "sourceColumn": "Warna",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Warna",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NoMesin",
+            "dataType": "string",
+            "sourceColumn": "NoMesin",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NoMesin",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NoRangka",
+            "dataType": "string",
+            "sourceColumn": "NoRangka",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NoRangka",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NamaPerusahaanKredit",
+            "dataType": "string",
+            "sourceColumn": "NamaPerusahaanKredit",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NamaPerusahaanKredit",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NoMesin1",
+            "dataType": "string",
+            "sourceColumn": "NoMesin1",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NoMesin1",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "CV/LCV",
+            "dataType": "string",
+            "sourceColumn": "CV/LCV",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "CV/LCV",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Series",
+            "dataType": "string",
+            "sourceColumn": "Series",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Series",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SDAItemNumber",
+            "dataType": "string",
+            "sourceColumn": "SDAItemNumber",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SDAItemNumber",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SegmentDescription",
+            "dataType": "string",
+            "sourceColumn": "SegmentDescription",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SegmentDescription",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TypeDescription",
+            "dataType": "string",
+            "sourceColumn": "TypeDescription",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TypeDescription",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "NamaPerusahaan",
+            "dataType": "string",
+            "sourceColumn": "NamaPerusahaan",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "NamaPerusahaan",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "JenisPerusahaan",
+            "dataType": "string",
+            "sourceColumn": "JenisPerusahaan",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "JenisPerusahaan",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "ZTempFakpol",
               "expressionSource": "DatabaseQuery",
               "schemaName": "dbo"
             }
