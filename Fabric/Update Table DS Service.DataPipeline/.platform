@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Update Table DS Service"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "60782867-e1df-9816-4244-f49e456b4f7f"
+  }
+}
