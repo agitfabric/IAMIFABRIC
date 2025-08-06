@@ -44077,6 +44077,20 @@
                 "value": "Automatic"
               }
             ]
+          },
+          {
+            "name": "SiteCategory",
+            "dataType": "string",
+            "sourceColumn": "SiteCategory",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SiteCategory",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
           }
         ],
         "partitions": [

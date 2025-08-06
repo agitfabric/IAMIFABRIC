@@ -1,7 +1,5 @@
 CREATE PROCEDURE [dbo].[SP_REPORT_33]
 AS
-BEGIN
-SET NOCOUNT ON;
 
     DECLARE 
         @GetMaxRunningDate date = ISNULL(
@@ -16,33 +14,25 @@ SET NOCOUNT ON;
         FROM SILVER_WAREHOUSE.dbo.InventTrans
         WHERE dataAreaId != 'kzu' 
           AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
-    ),
-    DateRanges AS (
-        SELECT 
-            ym.YearMonth,
-            CAST(DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, ym.YearMonth + '01'), 0))) AS date) AS StartDate,
-            CAST(DATEADD(DAY, -1, DATEADD(MONTH, 1, ym.YearMonth + '01')) AS date) AS EndDate
-        FROM YearMonths ym
-    ) 
+    ) SELECT * INTO #TempYearMonthReport33 FROM YearMonths;
      -- Delete and insert per month range
-    DELETE r
-    FROM Report_33 r
-    JOIN DateRanges d ON CAST(r.Tanggal_SO AS date) BETWEEN d.StartDate AND d.EndDate
-    WHERE r.DealerCategory = 'NON-AI';
+   -- Variabel untuk looping
+DECLARE @LoopYearMonth CHAR(6);
+DECLARE @StarDate DATE;
+DECLARE @MaxDate DATE;
 
-    WITH YearMonths AS (
-        SELECT DISTINCT LEFT(CONVERT(char, DatePhysical, 112), 6) AS YearMonth
-        FROM SILVER_WAREHOUSE.dbo.InventTrans
-        WHERE dataAreaId != 'kzu' 
-          AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
-    ),
-    DateRanges AS (
-        SELECT 
-            ym.YearMonth,
-            CAST(DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, ym.YearMonth + '01'), 0))) AS date) AS StartDate,
-            CAST(DATEADD(DAY, -1, DATEADD(MONTH, 1, ym.YearMonth + '01')) AS date) AS EndDate
-        FROM YearMonths ym
-    ) 
+-- Mulai proses per bulan
+WHILE EXISTS (SELECT TOP 1 1 FROM #TempYearMonthReport33)
+BEGIN
+    SELECT TOP 1 @LoopYearMonth = YearMonth FROM #TempYearMonthReport33 ORDER BY YearMonth ASC;
+
+    SET @StarDate = DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, '19000101', @LoopYearMonth + '01'), '19000101')));
+    SET @MaxDate  = DATEADD(DAY, -1, DATEADD(MONTH, 1, @LoopYearMonth + '01'));
+
+    DELETE FROM Report_33 
+    WHERE CAST(Tanggal_SO AS DATE) BETWEEN @StarDate AND @MaxDate
+      AND DealerCategory = 'NON-AI';
+
     INSERT INTO Report_33
     Select  InvoiceId,
 					Tanggal_SO,
@@ -91,10 +81,9 @@ SET NOCOUNT ON;
 				left join SILVER_WAREHOUSE.dbo.Ledger g on a.dataAreaId = g.Name
 				left join SILVER_WAREHOUSE.dbo.SalesQuotationLine h on h.SalesQuotationNumber = a.QuotationNumber and h.ItemNumber = b.ItemNumber and h.LineNum = b.LineNum 
 				inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem i on i.ItemDataAreaId = b.dataAreaId and i.ItemId = b.ItemNumber and i.ItemGroupId in ('SP01','SP02')
-                INNER JOIN DateRanges dr ON CAST(c.InvoiceDate AS date) BETWEEN dr.StartDate AND dr.EndDate
 				CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(a.SalesName) as m
 			where   
-						a.SalesOrderPoolId = 'SP'
+						a.SalesOrderPoolId = 'SP' AND CAST(c.InvoiceDate AS DATE) BETWEEN @StarDate AND @MaxDate
 			Group by 
 					a.ZCreatedDateTime, 
 					a.InvoiceAccount, m.MaskedName, a.SalesId, 
@@ -108,5 +97,8 @@ SET NOCOUNT ON;
 					c.InvoiceId,
 					g.Description,
 					i.ItemGroupId
-			) x
+			) x;
+			 DELETE FROM #TempYearMonthReport33 WHERE YearMonth = @LoopYearMonth;
 END
+
+DROP TABLE #TempYearMonthReport33;

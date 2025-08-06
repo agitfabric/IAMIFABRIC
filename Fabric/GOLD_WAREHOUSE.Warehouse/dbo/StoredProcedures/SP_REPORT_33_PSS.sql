@@ -1,7 +1,5 @@
 CREATE PROCEDURE [dbo].[SP_REPORT_33_PSS]
 AS
-BEGIN
-SET NOCOUNT ON;
 
     DECLARE 
         @GetMaxRunningDate date = ISNULL(
@@ -16,33 +14,29 @@ SET NOCOUNT ON;
         FROM SILVER_WAREHOUSE.dbo.InventTrans
         WHERE dataAreaId != 'kzu' 
           AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
-    ),
-    DateRanges AS (
-        SELECT 
-            ym.YearMonth,
-            CAST(DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, ym.YearMonth + '01'), 0))) AS date) AS StartDate,
-            CAST(DATEADD(DAY, -1, DATEADD(MONTH, 1, ym.YearMonth + '01')) AS date) AS EndDate
-        FROM YearMonths ym
-    ) 
-     -- Delete and insert per month range
-	DELETE r
-	FROM Report_33 r
-	JOIN DateRanges d ON CAST(r.Tanggal_SO AS date) BETWEEN d.StartDate AND d.EndDate
-    WHERE r.DealerCategory = 'AI';
+    )SELECT * INTO #TempYearMonthReport33PSS FROM YearMonths;
 
-    WITH YearMonths AS (
-        SELECT DISTINCT LEFT(CONVERT(char, DatePhysical, 112), 6) AS YearMonth
-        FROM SILVER_WAREHOUSE.dbo.InventTrans
-        WHERE dataAreaId != 'kzu' 
-          AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
-    ),
-    DateRanges AS (
-        SELECT 
-            ym.YearMonth,
-            CAST(DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, ym.YearMonth + '01'), 0))) AS date) AS StartDate,
-            CAST(DATEADD(DAY, -1, DATEADD(MONTH, 1, ym.YearMonth + '01')) AS date) AS EndDate
-        FROM YearMonths ym
-    ) 
+-- Variabel loop
+DECLARE @LoopYearMonth CHAR(6);
+DECLARE @StartDate DATE;
+DECLARE @MaxDate DATE;
+
+-- Loop tiap bulan
+WHILE EXISTS (SELECT TOP 1 1 FROM #TempYearMonthReport33PSS)
+BEGIN
+    SELECT TOP 1 @LoopYearMonth = YearMonth FROM #TempYearMonthReport33PSS ORDER BY YearMonth ASC;
+
+    -- Hitung tanggal awal dan akhir untuk bulan yang sedang diproses
+    SET @StartDate = DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, '19000101', @LoopYearMonth + '01'), '19000101')));
+    SET @MaxDate = DATEADD(DAY, -1, DATEADD(MONTH, 1, @LoopYearMonth + '01'));
+
+    -- Hapus data lama untuk rentang tanggal & DealerCategory = 'AI'
+    DELETE FROM Report_33 
+    WHERE CAST(Tanggal_SO AS DATE) BETWEEN @StartDate AND @MaxDate 
+      AND DealerCategory = 'AI';
+
+   
+    
     INSERT INTO Report_33
     SELECT	max(sis.data_invoiceNo) data_invoiceNo,
 					cast(sso.data_createdTime as date) as Tanggal_SO,
@@ -70,8 +64,8 @@ SET NOCOUNT ON;
 				LEFT JOIN SILVER_WAREHOUSE.dbo.site_mapping sm ON sm.SiteCodePSS = sso.data_site 
 				LEFT JOIN SILVER_WAREHOUSE.dbo.ZAISITES z  ON z.SiteCode  = sm.SiteCode 
 				LEFT JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem t on t.ItemId = sso.data_items_itemNo and t.ItemDataAreaId = 'zir'
-				INNER JOIN DateRanges dr ON CAST(sso.data_createdTime AS date) BETWEEN dr.StartDate AND dr.EndDate
 				CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(sso.data_name) as m
+				WHERE CAST(sso.data_createdTime AS DATE) BETWEEN @StartDate AND @MaxDate
 				--WHERE cast(sso.data_createdTime as date) between @StarDate and @MaxDate
 				GROUP BY 
 					sso.data_salesOrderNo,
@@ -88,4 +82,9 @@ SET NOCOUNT ON;
 					z.SiteCode,
 					z.Area, t.ItemGroupId,  z.SiteName,m.MaskedName
 				Order by z.SiteCode, sso.data_createdTime
+				    -- Buang yang sudah diproses
+    DELETE FROM #TempYearMonthReport33PSS WHERE YearMonth = @LoopYearMonth;
 END
+
+-- Hapus temp table
+DROP TABLE #TempYearMonthReport33PSS;

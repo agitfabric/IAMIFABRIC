@@ -6,5 +6,6 @@ CREATE TABLE [dbo].[ZAISITES] (
 	[GroupDealer] varchar(8000) NULL, 
 	[Dealer] varchar(8000) NULL, 
 	[DealerName] varchar(8000) NULL, 
-	[City] varchar(8000) NULL
+	[City] varchar(8000) NULL, 
+	[SiteCategory] varchar(8000) NULL
 );
