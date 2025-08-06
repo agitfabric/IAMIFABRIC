@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Automail SPFUAI6"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1f439c08-43f6-8a8d-4236-f944a4ac25d8"
+  }
+}
