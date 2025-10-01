@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[sales_OKK] (
+
+	[page] bigint NULL, 
+	[rqUuid] varchar(8000) NULL, 
+	[totalRows] bigint NULL, 
+	[data_timestamp] varchar(8000) NULL, 
+	[data_transactionNo] varchar(8000) NULL, 
+	[data_okkNo] varchar(8000) NULL, 
+	[data_okkStatus] varchar(8000) NULL, 
+	[data_okkDate] varchar(8000) NULL, 
+	[data_okkType] varchar(8000) NULL, 
+	[data_referenceDocument] varchar(8000) NULL, 
+	[data_referenceDocumentNo] varchar(8000) NULL, 
+	[data_vin] varchar(8000) NULL, 
+	[data_itemNo] varchar(8000) NULL, 
+	[data_itemName] varchar(8000) NULL, 
+	[data_shippingVendorNo] varchar(8000) NULL, 
+	[data_shippingVendorName] varchar(8000) NULL, 
+	[data_shippingVendorAddress] varchar(8000) NULL, 
+	[data_issuingLocation] varchar(8000) NULL, 
+	[data_issuingLocationAddress] varchar(8000) NULL, 
+	[data_destinationLocation] varchar(8000) NULL, 
+	[data_destinationLocationAddress] varchar(8000) NULL, 
+	[data_internalShipping] varchar(8000) NULL, 
+	[data_driverName] varchar(8000) NULL
+);

@@ -1,8 +1,8 @@
-CREATE   PROCEDURE SP_REPORT_25 AS
+CREATE       PROCEDURE [dbo].[SP_REPORT_25] AS
 
 DECLARE @GetMaxRunningDate DATE, @GetCurrentDate DATE
-SELECT @GetMaxRunningDate =ISNULL(DATEADD(DAY,1,MAX(DatePhysical)), '2019-09-01'), @GetCurrentDate = CAST(GETDATE() AS DATE)
-FROM GOLD_WAREHOUSE.dbo.Report_25;
+SELECT @GetMaxRunningDate =ISNULL(DATEADD(DAY,1,MAX(DatePhysical)), '2019-09-01'), @GetCurrentDate = CAST(DATEADD(hour,7,GETDATE() )AS DATE)
+FROM GOLD_WAREHOUSE.dbo.Report_25 where kode_dealer != 'AI';
 
 WITH temp_union AS (
     SELECT 
@@ -23,17 +23,17 @@ WITH temp_union AS (
         a.StatusReceipt,
         a.StatusIssue
     FROM SILVER_WAREHOUSE.dbo.InventTrans a
-    INNER JOIN SILVER_WAREHOUSE.dbo.Dim b ON a.inventDimId = b.inventDimId
-    INNER JOIN SILVER_WAREHOUSE.dbo.InventTransOrigin c ON a.InventTransOrigin = c.RecId1
-    INNER JOIN SILVER_WAREHOUSE.dbo.ZInventSites d ON b.InventSiteId = d.SiteId
-    INNER JOIN SILVER_WAREHOUSE.dbo.Ledger e ON upper(a.dataAreaId) = e.Name
-    INNER JOIN SILVER_WAREHOUSE.dbo.DeviceTableMasters f ON b.InventDimension1 = f.MasterId
+    INNER JOIN SILVER_WAREHOUSE.dbo.Dim b ON LOWER(a.inventDimId) = LOWER(b.inventDimId)
+    INNER JOIN SILVER_WAREHOUSE.dbo.InventTransOrigin c ON LOWER(a.InventTransOrigin) = LOWER(c.RecId1)
+    INNER JOIN SILVER_WAREHOUSE.dbo.ZInventSites d ON LOWER(b.InventSiteId) = LOWER(d.SiteId)
+    INNER JOIN SILVER_WAREHOUSE.dbo.Ledger e ON LOWER(a.dataAreaId) = LOWER(e.Name)
+    INNER JOIN SILVER_WAREHOUSE.dbo.DeviceTableMasters f ON LOWER(b.InventDimension1) = LOWER(f.MasterId)
     INNER JOIN (
         SELECT DISTINCT ItemId, AMItemMajorGroupId, AMItemMinorGroupId, dataAreaId, UPPER(NameAlias) AS NameAlias 
         FROM SILVER_WAREHOUSE.dbo.ZInventTables
-    ) g ON g.dataAreaId = a.dataAreaId AND g.ItemId = a.ItemId
+    ) g ON LOWER(g.dataAreaId) = LOWER(a.dataAreaId) AND LOWER(g.ItemId) = LOWER(a.ItemId)
     WHERE 
-        a.dataAreaId NOT IN ('kzu')
+       LOWER(a.dataAreaId) NOT IN ('kzu')
 
     UNION ALL
 SELECT 
@@ -54,16 +54,16 @@ SELECT
         NULL AS StatusReceipt, -- No equivalent in DataBilling
         NULL AS StatusIssue -- No equivalent in DataBilling
     FROM SILVER_WAREHOUSE.dbo.ZDataBillingViews k
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites b ON k.dataAreaId = b.dataAreaId AND b.SiteId = k.Site
-    LEFT JOIN SILVER_WAREHOUSE.dbo.Ledger c ON k.dataAreaId = c.Name 
-    LEFT JOIN SILVER_WAREHOUSE.dbo.DeviceTableMasters g ON g.MasterId = k.VIN 
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites b ON LOWER(k.dataAreaId) = LOWER(b.dataAreaId) AND LOWER(b.SiteId) = LOWER(k.Site)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.Ledger c ON LOWER(k.dataAreaId) = LOWER(c.Name)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.DeviceTableMasters g ON LOWER(g.MasterId) = LOWER(k.VIN )
     LEFT JOIN (
         SELECT DISTINCT ItemId, AMItemMajorGroupId, AMItemMinorGroupId, dataAreaId, NameAlias 
         FROM SILVER_WAREHOUSE.dbo.ZInventTables
-    ) f ON k.ItemId = f.ItemId AND f.dataAreaId = k.dataAreaId
+    ) f ON LOWER(k.ItemId) = LOWER(f.ItemId) AND LOWER(f.dataAreaId) = LOWER(k.dataAreaId)
     WHERE 
-        k.dataAreaId NOT IN ('kzu') 
-        AND k.IsCanceled = 'No'),
+        LOWER(k.dataAreaId) NOT IN ('kzu') 
+        AND LOWER(k.IsCanceled) = 'no'),
 
     aggregated_stock AS (
     SELECT 

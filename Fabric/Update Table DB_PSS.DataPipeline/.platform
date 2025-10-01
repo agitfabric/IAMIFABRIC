@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Update Table DB_PSS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bd379e61-bf75-8e9c-4ec3-7bf8d6a9622d"
+  }
+}

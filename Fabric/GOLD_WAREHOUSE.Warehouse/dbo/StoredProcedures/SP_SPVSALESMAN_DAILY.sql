@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_SPVSALESMAN_DAILY]
+CREATE   PROCEDURE [dbo].[SP_SPVSALESMAN_DAILY]
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -36,7 +36,7 @@ BEGIN
       AND LEFT(CONVERT(CHAR(8), a.InvoiceDate, 112), 6) <= @RunningDate;
 
     -- Ambil data outlet & join date dari report
-    SELECT @Outlet = OUTLET, @JoinDate = JoinDate
+    SELECT @Outlet = Outlet, @JoinDate = JoinDate
     FROM Report_52_SPVSalesman
     WHERE RunningDate = @RunningDate AND USERIDSALESMAN = @Salesman;
 

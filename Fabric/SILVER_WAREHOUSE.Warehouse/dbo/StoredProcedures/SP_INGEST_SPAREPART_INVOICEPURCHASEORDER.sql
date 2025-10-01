@@ -1,6 +1,4 @@
-CREATE PROCEDURE SP_INGEST_SPAREPART_INVOICEPURCHASEORDER AS
-TRUNCATE TABLE SILVER_WAREHOUSE.dbo.sparepart_invoicePurchaseOrder
-insert into SILVER_WAREHOUSE.dbo.sparepart_invoicePurchaseOrder
-select * from BRONZE_LAKEHOUSE_PSS.dbo.sparepart_invoicePurchaseOrder
-
---select * into SILVER_WAREHOUSE.dbo.sparepart_invoicePurchaseOrder from BRONZE_LAKEHOUSE_PSS.dbo.sparepart_invoicePurchaseOrder
+CREATE   PROCEDURE SP_INGEST_SPAREPART_INVOICEPURCHASEORDER AS
+TRUNCATE TABLE SILVER_WAREHOUSE.dbo.Sparepart_invoicePurchaseOrder
+insert into SILVER_WAREHOUSE.dbo.Sparepart_invoicePurchaseOrder
+select * from BRONZE_LAKEHOUSE_PSS.dbo.Sparepart_invoicePurchaseOrder

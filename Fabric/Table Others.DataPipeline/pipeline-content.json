@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup Others",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -154,6 +161,7 @@
             "type": "LakehouseTableSink",
             "tableActionOption": "OverwriteSchema",
             "partitionOption": "None",
+            "applyVOrder": true,
             "datasetSettings": {
               "type": "LakehouseTable",
               "typeProperties": {
@@ -266,7 +274,14 @@
           "secureOutput": false
         },
         "name": "TargetUnitServed",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "Copy",
@@ -515,7 +530,7 @@
                   "length": "255"
                 },
                 "sink": {
-                  "name": "CV / LCV",
+                  "name": "CV/LCV",
                   "physicalType": "string"
                 }
               },
@@ -608,7 +623,14 @@
           "secureOutput": false
         },
         "name": "ZtempFakpol_SourceToBronze",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "Copy",
@@ -960,7 +982,572 @@
         "name": "ZtempFakpol_BronzeToSilver",
         "dependsOn": [
           {
+            "activity": "Refresh ZtempFakpol",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Calendar",
+                "database": "IAMI_PROD"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "36f64b57-a64a-4d1a-8465-3238df5a6960"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Calendar"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Calendar",
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Calendar"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE from SILVER_WAREHOUSE.dbo.Calendar",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Calendar"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Calendar to Silver",
+        "dependsOn": [
+          {
+            "activity": "Refresh Table Others Calender",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Calendar"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE from GOLD_WAREHOUSE.dbo.Calendar",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Calendar"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "GOLD_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Calendar to Gold",
+        "dependsOn": [
+          {
+            "activity": "Calendar to Silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "dataUnitBegBal",
+                "database": "IAMI_PROD"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "36f64b57-a64a-4d1a-8465-3238df5a6960"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "dataUnitBegBal"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "dataUnitBegBal",
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "outletcolor",
+                "database": "IAMI_PROD"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "36f64b57-a64a-4d1a-8465-3238df5a6960"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from outletcolor",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "outletcolor"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "GOLD_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "outletcolor",
+        "dependsOn": [
+          {
+            "activity": "Truncate All",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "dataUnitBegBal"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE from SILVER_WAREHOUSE.dbo.dataUnitBegBal",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "dataUnitBegBal"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "dataUnitBegBal to Silver",
+        "dependsOn": [
+          {
+            "activity": "Refresh ZtempFakpol",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "9ad1f68e-3165-89f0-4ce2-2fd698b50835",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Truncate All",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "063eefae-6948-971d-451d-fb86d00b596e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table Others Calender",
+        "dependsOn": [
+          {
+            "activity": "Calendar",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8f3289ff-4860-9867-4190-58d45e736e71",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table Others",
+        "dependsOn": [
+          {
+            "activity": "Ingest Others",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "6cfae6a3-9a6b-849a-4ae4-1abe7c8e808d",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh ZtempFakpol",
+        "dependsOn": [
+          {
             "activity": "ZtempFakpol_SourceToBronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "dataUnitBegBal",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "TargetUnitServed",
             "dependencyConditions": [
               "Succeeded"
             ]

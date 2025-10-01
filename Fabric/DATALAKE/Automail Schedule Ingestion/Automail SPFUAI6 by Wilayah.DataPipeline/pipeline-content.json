@@ -1,0 +1,1202 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Get data spGetReportSPFUByWilayahAI6",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "additionalColumns": [
+              {
+                "name": "PeriodFrom",
+                "value": {
+                  "value": "@formatDateTime(startOfMonth(addDays(addHours(utcNow(),7), -1)), 'yyyy-MM-dd')",
+                  "type": "Expression"
+                }
+              },
+              {
+                "name": "PeriodTo",
+                "value": {
+                  "value": "@formatDateTime(addDays(addHours(utcNow(),7), -1), 'yyyy-MM-dd')",
+                  "type": "Expression"
+                }
+              },
+              {
+                "name": "Last_Update",
+                "value": {
+                  "value": "@formatDateTime(addHours(utcNow(), 7), 'yyyy-MM-dd HH:mm:ss')",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "sqlReaderStoredProcedureName": "[dbo].[spGetReportSPFUByWilayahAI6]",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "AUTOMAIL"
+              },
+              "externalReferences": {
+                "connection": "4a610ece-0e32-46fd-8611-c3ba53b9f48b"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE FROM BRONZE_WAREHOUSE.dbo.AUTOMAIL_SPFUAI6_WILAYAH",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_SPFUAI6_WILAYAH"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "BU",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "20"
+                },
+                "sink": {
+                  "name": "BU",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "MinorGroup",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "MinorGroup",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "Series",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "5"
+                },
+                "sink": {
+                  "name": "Series",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "PeriodFrom",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "PeriodFrom",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "PeriodTo",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "PeriodTo",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "Last_Update",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "Last_Update",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "DOS - Get data spGetReportSPFUByWilayahAI6",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "SELECT * FROM DOSWilayah WHERE CAST(CreatedDate AS DATE) = CAST(GETDATE() AS DATE)",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "DOSWilayah",
+                "database": "AUTOMAIL"
+              },
+              "externalReferences": {
+                "connection": "4a610ece-0e32-46fd-8611-c3ba53b9f48b"
+              }
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE_154_NONSAP",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "333fa733-104e-4995-8bb6-8802070b85fb",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "DOS_AUTOMAIL_SPFUAI6_WILAYAH"
+              }
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "SILVER spGetReportSPFUByWilayahAI6",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Get data spGetReportSPFUByWilayahAI6",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_SPFUAI6_WILAYAH"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from SILVER_WAREHOUSE.dbo.AUTOMAIL_SPFUAI6_WILAYAH where PeriodFrom = (select distinct PeriodFrom from BRONZE_WAREHOUSE.dbo.AUTOMAIL_SPFUAI6_WILAYAH)",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_SPFUAI6_WILAYAH"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "BU",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "BU",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "MinorGroup",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "MinorGroup",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Series",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "Series",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "NationalTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "NationalTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagutTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagutTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "SumbagselTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "SumbagselTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JKTTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JKTTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JabarTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JabarTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatengTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatengTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "JatimTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "JatimTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "KalimantanTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "KalimantanTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTDOS",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTDOS",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTAI",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTAI",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "Sul_IBTTOT",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                },
+                "sink": {
+                  "name": "Sul_IBTTOT",
+                  "physicalType": "decimal",
+                  "scale": 2,
+                  "precision": 18
+                }
+              },
+              {
+                "source": {
+                  "name": "PeriodFrom",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "PeriodFrom",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "PeriodTo",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "PeriodTo",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Last_Update",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "Last_Update",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

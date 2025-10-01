@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Daily Fakpol"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "be0c60c4-b12e-a3cc-4d4c-67865429589f"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Daily EUS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a1f1ad9e-3749-91fd-4615-3cc226bcb783"
+  }
+}

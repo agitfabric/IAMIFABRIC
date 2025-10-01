@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest_DB_PSS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e94a9181-1e14-8912-484b-084775aacfc7"
+  }
+}

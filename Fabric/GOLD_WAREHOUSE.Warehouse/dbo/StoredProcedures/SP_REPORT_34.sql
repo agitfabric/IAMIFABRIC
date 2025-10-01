@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_REPORT_34]
+CREATE   PROCEDURE [dbo].[SP_REPORT_34]
 AS
 
     DECLARE @GetMaxRunningDate DATE = ISNULL(
@@ -52,20 +52,20 @@ BEGIN
         END AS Remarks,
         GETDATE(), 'NON-AI', m.MaskedName, '', b.RecordId
     FROM SILVER_WAREHOUSE.dbo.ZSalesOrderHeader a
-    INNER JOIN SILVER_WAREHOUSE.dbo.ZSalesOrderLine b ON b.SalesOrderNumber = a.SalesId AND b.SalesOrderLineStatus != 'Canceled'
-    INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem c ON c.ItemDataAreaId = b.dataAreaId AND c.ItemId = b.ItemNumber AND c.ItemGroupId = 'SP01'
+    INNER JOIN SILVER_WAREHOUSE.dbo.ZSalesOrderLine b ON LOWER(b.SalesOrderNumber) = LOWER(a.SalesId) AND LOWER(b.SalesOrderLineStatus) != 'canceled'
+    INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem c ON LOWER(c.ItemDataAreaId) = LOWER(b.dataAreaId) AND LOWER(c.ItemId) = LOWER(b.ItemNumber) AND LOWER(c.ItemGroupId) = 'sp01'
     LEFT JOIN (
         SELECT a.SalesId, a.ItemId, MAX(a.InvoiceId) InvoiceId, MAX(a.InvoiceDate) InvoiceDate, SUM(a.Qty) QTY
         FROM SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans a
-        INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem b ON b.ItemDataAreaId = a.dataAreaId AND b.ItemId = a.ItemId AND b.ItemGroupId = 'SP01'
+        INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem b ON LOWER(b.ItemDataAreaId) = LOWER(a.dataAreaId) AND LOWER(b.ItemId) = LOWER(a.ItemId) AND LOWER(b.ItemGroupId) = 'sp01'
         GROUP BY a.SalesId, a.ItemId
     ) d ON d.SalesId = b.SalesOrderNumber AND d.ItemId = b.ItemNumber
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites e ON e.SiteId = a.InventSiteId
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventTables f ON f.ItemId = b.ItemNumber AND f.dataAreaId = b.dataAreaId
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZCustomers g ON g.AccountNum = a.CustAccount AND g.dataAreaId = a.dataAreaId
-    LEFT JOIN SILVER_WAREHOUSE.dbo.DirPartyTable h ON h.RecordId = g.Party
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites e ON LOWER(e.SiteId) = LOWER(a.InventSiteId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventTables f ON LOWER(f.ItemId) = LOWER(b.ItemNumber) AND LOWER(f.dataAreaId) = LOWER(b.dataAreaId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZCustomers g ON LOWER(g.AccountNum) = LOWER(a.CustAccount) AND LOWER(g.dataAreaId) = LOWER(a.dataAreaId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.DirPartyTable h ON LOWER(h.RecordId) = LOWER(g.Party)
 	CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(h.Name) as m
-    WHERE a.SalesOrderPoolId IN ('SP') AND a.ZSalesType != 'Klaim'
+    WHERE LOWER(a.SalesOrderPoolId) IN ('sp') AND LOWER(a.ZSalesType) != 'klaim'
       AND CAST(b.CreatedDateTime1 AS DATE) BETWEEN @StarDate AND @MaxDate
 
     UNION ALL
@@ -88,13 +88,13 @@ BEGIN
         END,
         GETDATE(), 'NON-AI', m.MaskedName, '', b.RecordId
     FROM SILVER_WAREHOUSE.dbo.InventJournalTable a
-    INNER JOIN SILVER_WAREHOUSE.dbo.InventJournalTrans b ON b.JournalId = a.JournalId
-    INNER JOIN SILVER_WAREHOUSE.dbo.CaseTable c ON c.CaseId = a.ZProjectId
-    INNER JOIN SILVER_WAREHOUSE.dbo.ZCustomers d ON d.AccountNum = c.CustAccount AND d.dataAreaId = c.dataAreaId
-    LEFT JOIN SILVER_WAREHOUSE.dbo.DirPartyTable d1 ON d1.RecordId = d.Party
-    INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem e ON e.ItemId = b.ItemId AND e.ItemDataAreaId = b.dataAreaId AND e.ItemGroupId = 'SP01'
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventTables f ON f.ItemId = b.ItemId AND f.dataAreaId = b.dataAreaId
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites g ON g.SiteId = c.ZInventSiteId
+    INNER JOIN SILVER_WAREHOUSE.dbo.InventJournalTrans b ON LOWER(b.JournalId) = LOWER(a.JournalId)
+    INNER JOIN SILVER_WAREHOUSE.dbo.CaseTable c ON LOWER(c.CaseId) = LOWER(a.ZProjectId)
+    INNER JOIN SILVER_WAREHOUSE.dbo.ZCustomers d ON LOWER(d.AccountNum) = LOWER(c.CustAccount) AND LOWER(d.dataAreaId) = LOWER(c.dataAreaId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.DirPartyTable d1 ON LOWER(d1.RecordId) = LOWER(d.Party)
+    INNER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem e ON LOWER(e.ItemId) = LOWER(b.ItemId) AND LOWER(e.ItemDataAreaId) = LOWER(b.dataAreaId) AND LOWER(e.ItemGroupId) = 'sp01'
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventTables f ON LOWER(f.ItemId) = LOWER(b.ItemId) AND LOWER(f.dataAreaId) = LOWER(b.dataAreaId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZInventSites g ON LOWER(g.SiteId) = LOWER(c.ZInventSiteId)
 	CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(d1.Name) as m
     WHERE a.ZProjectId != ''
       AND CAST(b.TransDate AS DATE) BETWEEN @StarDate AND @MaxDate;

@@ -7,9 +7,10 @@ BEGIN
 
 	DECLARE @DateFrom date, @DateTo date
 	
-	SELECT @DateFrom = dateadd(day,-30,GETDATE())
-	SELECT @DateTo = dateadd(day,0,GETDATE())
-	Delete Report_Fakpol Where ApprovalDate between @DateFrom and @DateTo
+	SELECT @DateFrom = DATEADD(DAY, -30, DATEADD(HOUR, 7, GETDATE()));
+	SELECT @DateTo   = DATEADD(DAY,  0, DATEADD(HOUR, 7, GETDATE()));
+
+	Delete Report_Fakpol Where ApprovalDate between @DateFrom and @DateTo AND DealerCategory != 'AI'
 	
     insert into Report_Fakpol
     select distinct
@@ -77,33 +78,66 @@ BEGIN
 		a6.[Date] GI_BPKBDate, 
 		a6.Name Nama_Penerima_BPKB, 
 		a6.KTP KTP_Penerima_BPKB, 
-		a6.Address Alamat_Penerima_BPKB, a.ItemNo, getdate() Last_Update,'DOS',
+		a6.Address Alamat_Penerima_BPKB, a.ItemNo,DATEADD(HOUR, 7, GETDATE()) Last_Update,'DOS',
 		m.MaskedName
 		from SILVER_WAREHOUSE.dbo.ZEFakpol a
-				left join SILVER_WAREHOUSE.dbo.ZInventSites b on b.SiteId = a.Site
-				left join SILVER_WAREHOUSE.dbo.Ledger b1 on b1.LegalEntityId = b.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.ZGoodReceiptFakpol c on c.PengajuanFakpolNo = a.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.ZSalesOrderLine  d  on d.SalesOrderNumber  = a.SalesOrderNo and d.ItemNumber = a.ItemNo 
-				left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader  f on f.SalesId  = a.SalesOrderNo 
-				left join SILVER_WAREHOUSE.dbo.ZInventTables  i on i.ItemId = a.ItemNo and i.dataAreaId = a.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.DeviceModel DM on DM.ModelId=i.ItemId
-				left join SILVER_WAREHOUSE.dbo.DeviceTable k on k.DeviceId = a.VIN and k.dataAreaId = a.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.ZCustomers n on n.AccountNum = f.ZLeasing and n.dataAreaId = f.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.DirPartyTable o on o.RecordId = n.Party
-				left join SILVER_WAREHOUSE.dbo.Worker p1 on p1.PersonnelNumber = f.ZSupervisor
-				left join SILVER_WAREHOUSE.dbo.DirPartyTable p2 on p2.RecordId = p1.Person1
-				left join SILVER_WAREHOUSE.dbo.Worker q1 on q1.PersonnelNumber = f.ZSalesman
-				left join SILVER_WAREHOUSE.dbo.DirPartyTable q2 on q2.RecordId = q1.Person1
-				left join SILVER_WAREHOUSE.dbo.ZGoodReceiptFakpol a2 on a2.PengajuanFakpolNo = a.PengajuanFakpolNo
-				left join SILVER_WAREHOUSE.dbo.ZGoodReceiptSTNK a3 on a3.PengajuanFakpolNo = a.PengajuanFakpolNo
-				left join SILVER_WAREHOUSE.dbo.ZGoodIssueSTNK a4 on a4.PengajuanNoFakpol = a.PengajuanFakpolNo
-				left join SILVER_WAREHOUSE.dbo.ZGoodReceiptBPKB a5 on a5.PengajuanFakpolNo = a.PengajuanFakpolNo
-				left join SILVER_WAREHOUSE.dbo.ZGoodIssueBPKB a6 on a6.PengajuanFakpolNo = a.PengajuanFakpolNo
-				left join SILVER_WAREHOUSE.dbo.ZCustomers a7 on a7.AccountNum = a.CustomerNo and a7.dataAreaId = a.dataAreaId
-				left join SILVER_WAREHOUSE.dbo.DirPartyTable a8 on a8.RecordId = a7.Party 
-				inner join (select VIN , Min(PrintedDate) PRINTEDDATE, min(RecordId) RecordId 
-							from SILVER_WAREHOUSE.dbo.ZEFakpol where ApprovedDate > '1900-01-01 12:00:00.000' group by VIN) r on r.RecordId = a.RecordId
-				left join SILVER_WAREHOUSE.dbo.AGITEFakpol s on s.ChassisNumber = a.VIN
+    left join SILVER_WAREHOUSE.dbo.ZInventSites b 
+        on LOWER(b.SiteId) = LOWER(a.Site)
+    left join SILVER_WAREHOUSE.dbo.Ledger b1 
+        on LOWER(b1.LegalEntityId) = LOWER(b.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.ZGoodReceiptFakpol c 
+        on LOWER(c.PengajuanFakpolNo) = LOWER(a.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.ZSalesOrderLine d  
+        on LOWER(d.SalesOrderNumber) = LOWER(a.SalesOrderNo) 
+        and LOWER(d.ItemNumber) = LOWER(a.ItemNo)
+    left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader f 
+        on LOWER(f.SalesId) = LOWER(a.SalesOrderNo)
+    left join SILVER_WAREHOUSE.dbo.ZInventTables i 
+        on LOWER(i.ItemId) = LOWER(a.ItemNo) 
+        and LOWER(i.dataAreaId) = LOWER(a.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.DeviceModel DM 
+        on LOWER(DM.ModelId) = LOWER(i.ItemId)
+    left join SILVER_WAREHOUSE.dbo.DeviceTable k 
+        on LOWER(k.DeviceId) = LOWER(a.VIN) 
+        and LOWER(k.dataAreaId) = LOWER(a.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.ZCustomers n 
+        on LOWER(n.AccountNum) = LOWER(f.ZLeasing) 
+        and LOWER(n.dataAreaId) = LOWER(f.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable o 
+        on o.RecordId = n.Party
+    left join SILVER_WAREHOUSE.dbo.Worker p1 
+        on LOWER(p1.PersonnelNumber) = LOWER(f.ZSupervisor)
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable p2 
+        on p2.RecordId = p1.Person1
+    left join SILVER_WAREHOUSE.dbo.Worker q1 
+        on LOWER(q1.PersonnelNumber) = LOWER(f.ZSalesman)
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable q2 
+        on q2.RecordId = q1.Person1
+    left join SILVER_WAREHOUSE.dbo.ZGoodReceiptFakpol a2 
+        on LOWER(a2.PengajuanFakpolNo) = LOWER(a.PengajuanFakpolNo)
+    left join SILVER_WAREHOUSE.dbo.ZGoodReceiptSTNK a3 
+        on LOWER(a3.PengajuanFakpolNo) = LOWER(a.PengajuanFakpolNo)
+    left join SILVER_WAREHOUSE.dbo.ZGoodIssueSTNK a4 
+        on LOWER(a4.PengajuanNoFakpol) = LOWER(a.PengajuanFakpolNo)
+    left join SILVER_WAREHOUSE.dbo.ZGoodReceiptBPKB a5 
+        on LOWER(a5.PengajuanFakpolNo) = LOWER(a.PengajuanFakpolNo)
+    left join SILVER_WAREHOUSE.dbo.ZGoodIssueBPKB a6 
+        on LOWER(a6.PengajuanFakpolNo) = LOWER(a.PengajuanFakpolNo)
+    left join SILVER_WAREHOUSE.dbo.ZCustomers a7 
+        on LOWER(a7.AccountNum) = LOWER(a.CustomerNo) 
+        and LOWER(a7.dataAreaId) = LOWER(a.dataAreaId)
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable a8 
+        on a8.RecordId = a7.Party
+    inner join (
+        select VIN, Min(PrintedDate) PRINTEDDATE, min(RecordId) RecordId 
+        from SILVER_WAREHOUSE.dbo.ZEFakpol 
+        where ApprovedDate > '1900-01-01 12:00:00.000' 
+        group by VIN
+    ) r 
+        on r.RecordId = a.RecordId
+    left join SILVER_WAREHOUSE.dbo.AGITEFakpol s 
+        on LOWER(s.ChassisNumber) = LOWER(a.VIN)
+
 				CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(a8.Name) as m
 		where a.ApprovedDate > '1900-01-01 12:00:00.000' 
 		  and (a.ApprovedDate between @DateFrom and @DateTo)
@@ -178,7 +212,7 @@ BEGIN
 		x.KTP_Penerima_BPKB, 
 		x.Alamat_Penerima_BPKB, 
 		x.ItemNo, 
-		GETDATE() Last_Update,
+		DATEADD(HOUR, 7, GETDATE()) Last_Update,
 		'WEB',
 		m.MaskedName
 	from
@@ -251,23 +285,41 @@ BEGIN
 	NULL Alamat_Penerima_BPKB,	
 	Isnull(b.ItemId, c.SDAItemNumber) ItemNo 
 	from SILVER_WAREHOUSE.dbo.AGITEFakpol a	
-		left join SILVER_WAREHOUSE.dbo.DeviceTableMasters k on k.MasterId = a.ChassisNumber
-		left join SILVER_WAREHOUSE.dbo.DeviceTable b on b.DeviceId = a.ChassisNumber and b.PurchInventRefId != '' and lower(b.dataAreaId) != 'kzu' and b.SalesInvoiceId != ''
-		left join SILVER_WAREHOUSE.dbo.ZTempFakpol c on c.NoRangka = a.ChassisNumber
-		left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans d on d.InvoiceId = b.SalesInvoiceId and d.ItemId = k.ModelId
-		left join SILVER_WAREHOUSE.dbo.CustInvoiceJour d1 on d1.InvoiceId = d.InvoiceId
-		left join SILVER_WAREHOUSE.dbo.ZCustomers f on f.AccountNum = d1.OrderAccount and f.dataAreaId = left(Isnull(Isnull(a.KodeOutlet,c.KodeOutlet),left(SalesInvoiceId,5)),3)
-		left join SILVER_WAREHOUSE.dbo.DirPartyTable g on g.RecordId = f.Party
-		left join SILVER_WAREHOUSE.dbo.ZInventSites m on m.SiteId = Isnull(Isnull(a.KodeOutlet,c.KodeOutlet),left(PurchInventRefId,5))
-		left join SILVER_WAREHOUSE.dbo.ZInventTables e on e.dataAreaId = m.dataAreaId and e.ItemId = Isnull(b.ItemId, c.SDAItemNumber)
-		left join SILVER_WAREHOUSE.dbo.DeviceModel DM on DM.ModelId = Isnull(b.ItemId, c.SDAItemNumber)
-		left join SILVER_WAREHOUSE.dbo.Ledger led on led.LegalEntityId = m.dataAreaId
+    left join SILVER_WAREHOUSE.dbo.DeviceTableMasters k 
+        on LOWER(k.MasterId) = LOWER(a.ChassisNumber)
+    left join SILVER_WAREHOUSE.dbo.DeviceTable b 
+        on LOWER(b.DeviceId) = LOWER(a.ChassisNumber) 
+        and LOWER(b.PurchInventRefId) != LOWER('') 
+        and LOWER(b.dataAreaId) != LOWER('kzu') 
+        and LOWER(b.SalesInvoiceId) != LOWER('')
+    left join SILVER_WAREHOUSE.dbo.ZTempFakpol c 
+        on LOWER(c.NoRangka) = LOWER(a.ChassisNumber)
+    left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans d 
+        on LOWER(d.InvoiceId) = LOWER(b.SalesInvoiceId) 
+        and LOWER(d.ItemId) = LOWER(k.ModelId)
+    left join SILVER_WAREHOUSE.dbo.CustInvoiceJour d1 
+        on LOWER(d1.InvoiceId) = LOWER(d.InvoiceId)
+    left join SILVER_WAREHOUSE.dbo.ZCustomers f 
+        on LOWER(f.AccountNum) = LOWER(d1.OrderAccount) 
+        and LOWER(f.dataAreaId) = LOWER(LEFT(ISNULL(ISNULL(a.KodeOutlet,c.KodeOutlet),LEFT(SalesInvoiceId,5)),3))
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable g 
+        on LOWER(g.RecordId) = LOWER(f.Party)
+    left join SILVER_WAREHOUSE.dbo.ZInventSites m 
+        on LOWER(m.SiteId) = LOWER(ISNULL(ISNULL(a.KodeOutlet,c.KodeOutlet),LEFT(PurchInventRefId,5)))
+    left join SILVER_WAREHOUSE.dbo.ZInventTables e 
+        on LOWER(e.dataAreaId) = LOWER(m.dataAreaId) 
+        and LOWER(e.ItemId) = LOWER(ISNULL(b.ItemId, c.SDAItemNumber))
+    left join SILVER_WAREHOUSE.dbo.DeviceModel DM 
+        on LOWER(DM.ModelId) = LOWER(ISNULL(b.ItemId, c.SDAItemNumber))
+    left join SILVER_WAREHOUSE.dbo.Ledger led 
+        on LOWER(led.LegalEntityId) = LOWER(m.dataAreaId)
+
 	where DealerCategory = 'Non AI' 
 		and convert(char,a.ApprovalDate,112) > '20200101' 
 		and (a.ApprovalDate between @DateFrom and @DateTo)
 		--and a.ChassisNumber in ('MHCNMR71HKJ112844','MHCN1R71LLJ113514')
-		and a.ChassisNumber not in (select VIN from SILVER_WAREHOUSE.dbo.ZEFakpol where ApprovedDate > '1900-01-01 12:00:00.000' group by VIN)
+		and a.ChassisNumber not in (select distinct VIN from SILVER_WAREHOUSE.dbo.ZEFakpol where ApprovedDate > '1900-01-01 12:00:00.000' group by VIN)
 	)x
-		left join SILVER_WAREHOUSE.dbo.ZInventTables e on e.dataAreaId = x.KodeDealer and e.ItemId = x.ItemNo
+		left join SILVER_WAREHOUSE.dbo.ZInventTables e on LOWER(e.dataAreaId) = LOWER(x.KodeDealer) and LOWER(e.ItemId) = LOWER(x.ItemNo)
 		CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(x.CustomerName) as m
 	END

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest Gold"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2dbed47c-da8e-93d4-4cab-a074d93f177c"
+  }
+}

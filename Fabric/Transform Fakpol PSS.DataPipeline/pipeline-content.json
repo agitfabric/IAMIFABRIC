@@ -1,0 +1,103 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Report Fakpol PSS",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_FAKPOL_PSS]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "Report FAKPOL PSS SP",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "DECLARE\n\t@GetMaxRunningDate DATE\n\t\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(cast(max(ApprovalDate) as date),'2022-01-01')), 0)\n from Report_Fakpol where DealerCategory = 'AI'\n\n\n\tselect * from Report_Fakpol where cast(ApprovalDate as date) >= @GetMaxRunningDate AND DealerCategory = 'AI'",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "IAMI_PROD"
+              },
+              "externalReferences": {
+                "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DECLARE\n\t@GetMaxRunningDate DATE\n\t\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(cast(max(ApprovalDate) as date),'2022-01-01')), 0)\n from Report_Fakpol where DealerCategory = 'AI'\n\n\n\tDelete Report_Fakpol where cast(ApprovalDate as date) >= @GetMaxRunningDate AND DealerCategory = 'AI'",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "GOLD_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Report_Fakpol"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

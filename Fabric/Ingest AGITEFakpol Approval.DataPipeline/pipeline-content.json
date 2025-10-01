@@ -2,414 +2,8 @@
   "properties": {
     "activities": [
       {
-        "type": "Copy",
-        "typeProperties": {
-          "source": {
-            "type": "SqlServerSource",
-            "sqlReaderQuery": {
-              "value": "@concat(\n  'EXEC [dbo].[SP_DOS_FakpolReportingByApprovalDate] ',\n  '@startAppDate = ''', variables('maxdate'), ''', ',\n  '@endAppDate = ''', variables('endDate'), ''', ',\n  '@startPrtDate = '''', ',\n  '@endPrtDate = '''';'\n\n)\n",
-              "type": "Expression"
-            },
-            "partitionOption": "None",
-            "queryTimeout": "02:00:00",
-            "datasetSettings": {
-              "type": "SqlServerTable",
-              "typeProperties": {
-                "database": "IAMI_FAKPOL"
-              },
-              "schema": [],
-              "externalReferences": {
-                "connection": "edc4fed5-2e71-4afc-860e-71baea221ce7"
-              },
-              "annotations": []
-            }
-          },
-          "sink": {
-            "type": "LakehouseTableSink",
-            "tableActionOption": "OverwriteSchema",
-            "partitionOption": "None",
-            "datasetSettings": {
-              "type": "LakehouseTable",
-              "typeProperties": {
-                "table": "AGITEFakpol"
-              },
-              "schema": [],
-              "linkedService": {
-                "name": "BRONZE_LAKEHOUSE",
-                "properties": {
-                  "type": "Lakehouse",
-                  "typeProperties": {
-                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000",
-                    "rootFolder": "Tables"
-                  },
-                  "annotations": []
-                }
-              },
-              "annotations": []
-            }
-          },
-          "translator": {
-            "type": "TabularTranslator",
-            "mappings": [
-              {
-                "source": {
-                  "name": "IdFakpol",
-                  "type": "Guid",
-                  "physicalType": "uniqueidentifier"
-                },
-                "sink": {
-                  "name": "IdFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "DealerCategory",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "6"
-                },
-                "sink": {
-                  "name": "DealerCategory",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "KodeOutlet",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "5"
-                },
-                "sink": {
-                  "name": "KodeOutlet",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "OutletName",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "MAX"
-                },
-                "sink": {
-                  "name": "OutletName",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "InvoiceDate",
-                  "type": "DateTime",
-                  "physicalType": "date"
-                },
-                "sink": {
-                  "name": "InvoiceDate",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "InvoiceNo",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "10"
-                },
-                "sink": {
-                  "name": "InvoiceNo",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "CustomerName",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "131"
-                },
-                "sink": {
-                  "name": "CustomerName",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "KTP",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "60"
-                },
-                "sink": {
-                  "name": "KTP",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "TDP",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "50"
-                },
-                "sink": {
-                  "name": "TDP",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "Alamat",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "201"
-                },
-                "sink": {
-                  "name": "Alamat",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "City",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "30"
-                },
-                "sink": {
-                  "name": "City",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "TanggalPengajuanFakpol",
-                  "type": "DateTime",
-                  "physicalType": "datetime"
-                },
-                "sink": {
-                  "name": "TanggalPengajuanFakpol",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "NoPengajuanFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "100"
-                },
-                "sink": {
-                  "name": "NoPengajuanFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "CreatedDate",
-                  "type": "DateTime",
-                  "physicalType": "date"
-                },
-                "sink": {
-                  "name": "CreatedDate",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "ApprovalDate",
-                  "type": "DateTime",
-                  "physicalType": "date"
-                },
-                "sink": {
-                  "name": "ApprovalDate",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "PrintedDate",
-                  "type": "DateTime",
-                  "physicalType": "date"
-                },
-                "sink": {
-                  "name": "PrintedDate",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "TglFakpol",
-                  "type": "DateTime",
-                  "physicalType": "date"
-                },
-                "sink": {
-                  "name": "TglFakpol",
-                  "physicalType": "timestamp"
-                }
-              },
-              {
-                "source": {
-                  "name": "NoFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "50"
-                },
-                "sink": {
-                  "name": "NoFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "StatusFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "50"
-                },
-                "sink": {
-                  "name": "StatusFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "NamaFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "131"
-                },
-                "sink": {
-                  "name": "NamaFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "AlamatFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "201"
-                },
-                "sink": {
-                  "name": "AlamatFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "CityFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "30"
-                },
-                "sink": {
-                  "name": "CityFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "KecamatanFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "30"
-                },
-                "sink": {
-                  "name": "KecamatanFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "KelurahanFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "30"
-                },
-                "sink": {
-                  "name": "KelurahanFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "KodePosFakpol",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "6"
-                },
-                "sink": {
-                  "name": "KodePosFakpol",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "Email",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "50"
-                },
-                "sink": {
-                  "name": "Email",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "Color",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "35"
-                },
-                "sink": {
-                  "name": "Color",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "ChassisNumber",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "20"
-                },
-                "sink": {
-                  "name": "ChassisNumber",
-                  "physicalType": "string"
-                }
-              },
-              {
-                "source": {
-                  "name": "EngineNumber",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "30"
-                },
-                "sink": {
-                  "name": "EngineNumber",
-                  "physicalType": "string"
-                }
-              }
-            ],
-            "typeConversion": true,
-            "typeConversionSettings": {
-              "allowDataTruncation": true,
-              "treatBooleanAsNumber": false
-            }
-          },
-          "enableStaging": false
-        },
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureInput": false,
-          "secureOutput": false
-        },
         "name": "AGITEFakpol Approval",
+        "type": "Copy",
         "dependsOn": [
           {
             "activity": "Set StartAppDate",
@@ -423,60 +17,488 @@
               "Succeeded"
             ]
           }
-        ]
-      },
-      {
-        "type": "Lookup",
-        "typeProperties": {
-          "source": {
-            "type": "DataWarehouseSource",
-            "sqlReaderQuery": "select left(convert(varchar,max(ApprovalDate),20),10) as md from AGITEFakpol go",
-            "partitionOption": "None",
-            "queryTimeout": "02:00:00"
-          },
-          "datasetSettings": {
-            "type": "DataWarehouseTable",
-            "schema": [],
-            "linkedService": {
-              "name": "SILVER_WAREHOUSE",
-              "properties": {
-                "type": "DataWarehouse",
-                "typeProperties": {
-                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
-                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
-                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
-                },
-                "annotations": []
-              }
-            },
-            "annotations": []
-          },
-          "firstRowOnly": true
-        },
+        ],
         "policy": {
           "timeout": "0.12:00:00",
           "retry": 0,
           "retryIntervalInSeconds": 30,
-          "secureInput": false,
-          "secureOutput": false
+          "secureOutput": false,
+          "secureInput": false
         },
-        "name": "maxdate",
-        "dependsOn": []
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": {
+              "value": "@concat(\n  'EXEC [dbo].[SP_DOS_FakpolReportingByApprovalDate] ',\n  '@startAppDate = ''', variables('maxdate'), ''', ',\n  '@endAppDate = ''', variables('endDate'), ''', ',\n  '@startPrtDate = '''', ',\n  '@endPrtDate = '''';'\n\n)\n",
+              "type": "Expression"
+            },
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "IAMI_FAKPOL"
+              },
+              "externalReferences": {
+                "connection": "edc4fed5-2e71-4afc-860e-71baea221ce7"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from BRONZE_WAREHOUSE.dbo.AGITEFakpol",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AGITEFakpol"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "IdFakpol",
+                  "type": "Guid",
+                  "physicalType": "uniqueidentifier"
+                },
+                "sink": {
+                  "name": "IdFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "DealerCategory",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "6"
+                },
+                "sink": {
+                  "name": "DealerCategory",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "KodeOutlet",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "5"
+                },
+                "sink": {
+                  "name": "KodeOutlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "OutletName",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "OutletName",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "InvoiceDate",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "InvoiceDate",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "InvoiceNo",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "10"
+                },
+                "sink": {
+                  "name": "InvoiceNo",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CustomerName",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "131"
+                },
+                "sink": {
+                  "name": "CustomerName",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "KTP",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "60"
+                },
+                "sink": {
+                  "name": "KTP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "TDP",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "TDP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Alamat",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "201"
+                },
+                "sink": {
+                  "name": "Alamat",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "City",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "City",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "TanggalPengajuanFakpol",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "TanggalPengajuanFakpol",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "NoPengajuanFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "NoPengajuanFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedDate",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "CreatedDate",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "ApprovalDate",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "ApprovalDate",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "PrintedDate",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "PrintedDate",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "TglFakpol",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "TglFakpol",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "NoFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "NoFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "StatusFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "StatusFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "NamaFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "131"
+                },
+                "sink": {
+                  "name": "NamaFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "AlamatFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "201"
+                },
+                "sink": {
+                  "name": "AlamatFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CityFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "CityFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "KecamatanFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "KecamatanFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "KelurahanFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "KelurahanFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "KodePosFakpol",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "6"
+                },
+                "sink": {
+                  "name": "KodePosFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Email",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "Email",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Color",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "35"
+                },
+                "sink": {
+                  "name": "Color",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ChassisNumber",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "20"
+                },
+                "sink": {
+                  "name": "ChassisNumber",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "EngineNumber",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "Engine_Number",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
       },
       {
-        "type": "SetVariable",
-        "typeProperties": {
-          "variableName": "maxdate",
-          "value": {
-            "value": "@activity('maxdate').output.firstRow.md",
-            "type": "Expression"
-          }
-        },
+        "name": "maxdate",
+        "type": "Lookup",
+        "dependsOn": [],
         "policy": {
-          "secureInput": false,
-          "secureOutput": false
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
         },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "select left(convert(varchar,max(ApprovalDate),20),10) as md from AGITEFakpol go",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None"
+          },
+          "firstRowOnly": true,
+          "datasetSettings": {
+            "annotations": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "annotations": [],
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                }
+              }
+            },
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "typeProperties": {}
+          }
+        }
+      },
+      {
         "name": "Set StartAppDate",
+        "type": "SetVariable",
         "dependsOn": [
           {
             "activity": "maxdate",
@@ -484,23 +506,59 @@
               "Succeeded"
             ]
           }
-        ]
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "maxdate",
+          "value": {
+            "value": "@activity('maxdate').output.firstRow.md",
+            "type": "Expression"
+          }
+        }
       },
       {
+        "name": "Set endAppDate",
         "type": "SetVariable",
+        "dependsOn": [],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
         "typeProperties": {
           "variableName": "endDate",
           "value": {
-            "value": "@formatDateTime(utcNow(), 'yyyy-MM-dd')\n",
+            "value": "@formatDateTime(addHours(utcNow(), 7), 'yyyy-MM-dd')",
             "type": "Expression"
           }
-        },
+        }
+      },
+      {
+        "name": "refresh metadata",
+        "type": "TridentNotebook",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "AGITEFakpol Approval",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
         "policy": {
-          "secureInput": false,
-          "secureOutput": false
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
         },
-        "name": "Set endAppDate",
-        "dependsOn": []
+        "typeProperties": {
+          "notebookId": "07cd4a62-cfd7-4326-95d4-6c5dd53ef577",
+          "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+        }
       }
     ],
     "variables": {

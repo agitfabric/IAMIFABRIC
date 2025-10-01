@@ -133,5 +133,5 @@ CREATE TABLE [dbo].[ZSalesOrderLine] (
 	[ZSDANo] varchar(8000) NULL, 
 	[RecordId] bigint NULL, 
 	[Last_Update] datetime2(6) NULL, 
-	[IsReturn] int NOT NULL
+	[IsReturn] int NULL
 );

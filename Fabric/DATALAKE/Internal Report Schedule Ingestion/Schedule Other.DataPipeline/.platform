@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Other"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "09e768b7-fa60-acc8-40e9-46e6acbe8813"
+  }
+}

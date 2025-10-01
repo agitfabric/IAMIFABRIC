@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup Table Daily Service",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate Table Daily Service",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -52,7 +59,10 @@
               "typeProperties": {
                 "source": {
                   "type": "SqlServerSource",
-                  "sqlReaderQuery": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}",
+                  "sqlReaderQuery": {
+                    "value": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}",
+                    "type": "Expression"
+                  },
                   "partitionOption": "None",
                   "queryTimeout": "02:00:00",
                   "datasetSettings": {
@@ -74,7 +84,10 @@
                   "datasetSettings": {
                     "type": "LakehouseTable",
                     "typeProperties": {
-                      "table": "@item().TableName"
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      }
                     },
                     "schema": [],
                     "linkedService": {
@@ -118,6 +131,45 @@
         "dependsOn": [
           {
             "activity": "Lookup Table Daily Service",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "3e736a68-5239-98f4-41e9-41a155d73613",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Truncate Table Daily Service",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "7df11955-35fd-8a2f-4005-b7645fe5a0b4",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table Daily Service",
+        "dependsOn": [
+          {
+            "activity": "Ingest Table Daily Service",
             "dependencyConditions": [
               "Succeeded"
             ]

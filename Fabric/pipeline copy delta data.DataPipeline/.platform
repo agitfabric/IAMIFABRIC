@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pipeline copy delta data"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9de913dd-5081-8d5f-4c64-25a15b07f0a3"
+  }
+}

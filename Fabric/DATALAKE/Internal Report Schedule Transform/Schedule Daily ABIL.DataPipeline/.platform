@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Daily ABIL"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1853a908-91ac-9f14-4756-fb8975f77b69"
+  }
+}

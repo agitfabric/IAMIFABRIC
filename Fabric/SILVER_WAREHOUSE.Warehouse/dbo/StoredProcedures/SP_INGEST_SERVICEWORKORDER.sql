@@ -1,4 +1,4 @@
-CREATE PROCEDURE SP_INGEST_SERVICEWORKORDER as
+CREATE   PROCEDURE SP_INGEST_SERVICEWORKORDER as
 drop table SILVER_WAREHOUSE.dbo.service_workOrder
 
 select * into service_workOrder from 

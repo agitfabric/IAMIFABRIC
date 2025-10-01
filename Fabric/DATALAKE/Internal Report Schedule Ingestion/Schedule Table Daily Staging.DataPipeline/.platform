@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Table Daily Staging"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6675cfc1-6c9f-bad1-49cc-1d98ab2e5c5d"
+  }
+}

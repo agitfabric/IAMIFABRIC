@@ -1,0 +1,215 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "SP Report 35 Monthly",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "SP Report 35 MONTHLY PARAMETERS",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_35_MONTHLY]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "SP Report 35 MONTHLY PARAMETERS",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "SP Report 35 MRPDEMAND NORMALIZED",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_35_MONTHLY_PARAMETERS]",
+          "storedProcedureParameters": {
+            "Year": {
+              "value": {
+                "value": "@string(formatDateTime(addHours(utcNow(), 7), 'yyyy'))",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "month": {
+              "value": {
+                "value": "@string(formatDateTime(subtractFromTime(addHours(utcNow(), 7),1,'Month'), 'MM'))",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "SP Report 35 MONTHLY PARAMETERS Looping",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_35_MONTHLY_PARAMETERS_LOOPING]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "SP Report 35 MRP Demand",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_35_MRPDEMAND]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "SP Report 35 MRPDEMAND NORMALIZED",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "SP Report 35 MRP Demand",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_35_MRPDEMANDNORMALIZED]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "Set variable1",
+        "type": "SetVariable",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "Year",
+              "value": {
+                "type": "Expression",
+                "content": "@string(formatDateTime(addHours(utcNow(), 7), 'yyyy'))"
+              }
+            },
+            {
+              "key": "month",
+              "value": {
+                "type": "Expression",
+                "content": "@string(formatDateTime(subtractFromTime(addHours(utcNow(), 7),1,'Month'), 'MM'))"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        }
+      }
+    ]
+  }
+}

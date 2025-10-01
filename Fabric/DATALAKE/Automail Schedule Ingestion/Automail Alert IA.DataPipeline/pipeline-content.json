@@ -1,0 +1,763 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Alert IA Header",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "--header\nselect ih.ia_id IA_ID,ih.ia_number IANumber, ih.requester Requester, ih.amount_currency CurrencyAmount,\nih.currency_rate CurrencyRate, ih.attachment_path AttachmentPath, ih.amount_max Amount, ih.notes Notes, ih.created_date CreatedDate\nfrom ia.ia_header ih\ninner join asmo.dbo.employee e on e.username = ih.requester\ninner join asmo.dbo.master_department d on d.department_id = ih.department_id\n\n--where cast(ih.created_date as date)  = CAST(GETDATE() AS DATE)\n\norder by ih.created_date desc ",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "TravelRequest"
+              },
+              "externalReferences": {
+                "connection": "8f742fb2-043e-466a-b5bf-a80504b9956e"
+              }
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "AUTOMAIL_IA_HEADER"
+              }
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "IA_ID",
+                  "type": "Int64",
+                  "physicalType": "bigint"
+                },
+                "sink": {
+                  "name": "IA_ID",
+                  "physicalType": "long"
+                }
+              },
+              {
+                "source": {
+                  "name": "IANumber",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "IANumber",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "Requester",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "Requester",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CurrencyAmount",
+                  "type": "String",
+                  "physicalType": "char",
+                  "length": "3"
+                },
+                "sink": {
+                  "name": "CurrencyAmount",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CurrencyRate",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "CurrencyRate",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "AttachmentPath",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "AttachmentPath",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "Amount",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "Amount",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "Notes",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "Notes",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedDate",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "CreatedDate",
+                  "physicalType": "timestamp"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA Detail",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Alert IA Header_SILVER",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "additionalColumns": [
+              {
+                "name": "CreatedDate",
+                "value": {
+                  "value": "@formatDateTime(addHours(utcNow(),7), 'yyyy-MM-dd HH:mm:ss')",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "sqlReaderQuery": "\nselect ia_id, item, qty, price_unit, cost_estimation, price_unit_foreign, cost_estimation_foreign\nfrom ia.ia_detail \n--where cast(modified_date as date)  = CAST(GETDATE() AS DATE)",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "TravelRequest"
+              },
+              "externalReferences": {
+                "connection": "8f742fb2-043e-466a-b5bf-a80504b9956e"
+              }
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "AUTOMAIL_IA_DETAIL"
+              }
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "ia_id",
+                  "type": "Int64",
+                  "physicalType": "bigint"
+                },
+                "sink": {
+                  "name": "ia_id",
+                  "physicalType": "long"
+                }
+              },
+              {
+                "source": {
+                  "name": "item",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "item",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "qty",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "qty",
+                  "physicalType": "integer"
+                }
+              },
+              {
+                "source": {
+                  "name": "price_unit",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "price_unit",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "cost_estimation",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "cost_estimation",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "price_unit_foreign",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "price_unit_foreign",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "cost_estimation_foreign",
+                  "type": "Decimal",
+                  "physicalType": "money",
+                  "scale": 4,
+                  "precision": 19
+                },
+                "sink": {
+                  "name": "cost_estimation_foreign",
+                  "physicalType": "decimal",
+                  "scale": 4,
+                  "precision": 19
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedDate",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "CreatedDate",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA testing",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "select *\nfrom ia.ia_detail where cast(modified_date as date)  = CAST(GETDATE() AS DATE)",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "TravelRequest"
+              },
+              "externalReferences": {
+                "connection": "8f742fb2-043e-466a-b5bf-a80504b9956e"
+              }
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "AUTOMAIL_IA_DETAIL"
+              }
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA Header_SILVER",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Alert IA Header",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "AUTOMAIL_IA_HEADER"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE FROM SILVER_WAREHOUSE.dbo.AUTOMAIL_IA_HEADER\n--WHERE CONVERT(CHAR(8), CreatedDate, 112) IN (\n    --SELECT DISTINCT CONVERT(CHAR(8), CreatedDate, 112)\n   -- FROM BRONZE_LAKEHOUSE.dbo.AUTOMAIL_IA_HEADER)",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "tableOption": "autoCreate",
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_IA_HEADER"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA Header_DETAIL",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Alert IA Detail",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "AUTOMAIL_IA_DETAIL"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from SILVER_WAREHOUSE.dbo.AUTOMAIL_IA_DETAIL ",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "tableOption": "autoCreate",
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_IA_DETAIL"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA ALL",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderStoredProcedureName": "[dbo].[GetDataIAOutStandingApproval]",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "TravelRequest"
+              },
+              "externalReferences": {
+                "connection": "8f742fb2-043e-466a-b5bf-a80504b9956e"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from AUTOMAIL_IA_ALL",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_IA_ALL"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Alert IA SILVER",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Alert IA ALL",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "BRONZE_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_IA_ALL"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DELETE FROM SILVER_WAREHOUSE.dbo.AUTOMAIL_IA_ALL\nWHERE CONVERT(CHAR(8), CreatedDate, 112) IN (\n    SELECT DISTINCT CONVERT(CHAR(8), CreatedDate, 112)\n   FROM BRONZE_WAREHOUSE.dbo.AUTOMAIL_IA_ALL)",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_IA_ALL"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

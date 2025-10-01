@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_CleansingSOUnit]
+CREATE   PROCEDURE [dbo].[SP_CleansingSOUnit]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -30,7 +30,7 @@ FROM ZSalesOrderLine zol
 INNER JOIN #ReturnData r 
     ON zol.InventTransIdReturn = r.InventTransIdReturn
 WHERE zol.IsReturn = 0;
-
+/*
 -- STEP 3: Update Report_1 by salesId
 UPDATE r1
 SET r1.IsReturn = 1
@@ -46,6 +46,7 @@ FROM GOLD_WAREHOUSE.dbo.Report_1 r1
 INNER JOIN #ReturnData r 
     ON r1.nomer_SO = r.salesIdreturned
 WHERE r1.IsReturn = 0;
+*/
 
 -- OPTIONAL: Bersihkan temp table
 DROP TABLE IF EXISTS #ReturnData;

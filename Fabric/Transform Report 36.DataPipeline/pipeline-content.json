@@ -1,0 +1,33 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "SP Report 36",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_36]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

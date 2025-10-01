@@ -1,0 +1,221 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Copy data1",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "DirPartyLocation",
+                "database": "IAMI_PROD"
+              },
+              "externalReferences": {
+                "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete * from DirPartyLocation",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "DirPartyLocation"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Lookup1",
+        "type": "Lookup",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT  table_schema AS nama_skema, n.table_name AS nama_tabel\nFROM INFORMATION_SCHEMA.TABLES n\nWHERE TABLE_TYPE = 'BASE TABLE'\n  AND TABLE_SCHEMA = 'dbo' and table_name in ('PositionDetails','ProjInvoiceItem','PurchaseOrderHeaderV2','SalesQuotationLine','SiteLogisticLocation','VendTable','ZDataBillingViews','ZGoodReceiptBPKB','ZProjInvoiceEmpl','ZSalesOrderLine');",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None"
+          },
+          "firstRowOnly": false,
+          "datasetSettings": {
+            "annotations": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "annotations": [],
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                }
+              }
+            },
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "typeProperties": {}
+          }
+        }
+      },
+      {
+        "name": "ForEach1",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "Lookup1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lookup1').output.value",
+            "type": "Expression"
+          },
+          "isSequential": true,
+          "activities": [
+            {
+              "name": "Copy data2",
+              "type": "Copy",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "queryTimeout": "02:00:00",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "type": "SqlServerTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().nama_skema",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().nama_tabel",
+                        "type": "Expression"
+                      },
+                      "database": "IAMI_PROD"
+                    },
+                    "externalReferences": {
+                      "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+                    }
+                  }
+                },
+                "sink": {
+                  "type": "DataWarehouseSink",
+                  "preCopyScript": {
+                    "value": "TRUNCATE TABLE [@{item().nama_tabel}]",
+                    "type": "Expression"
+                  },
+                  "allowCopyCommand": true,
+                  "copyCommandSettings": {},
+                  "disableMetricsCollection": false,
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "SILVER_WAREHOUSE",
+                      "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                          "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                          "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                        }
+                      }
+                    },
+                    "type": "DataWarehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().nama_skema",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().nama_tabel",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "enableStaging": true,
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

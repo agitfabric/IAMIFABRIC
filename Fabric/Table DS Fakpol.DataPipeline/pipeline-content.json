@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup DS Fakpol",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate DS Fakpol",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -52,7 +59,10 @@
               "typeProperties": {
                 "source": {
                   "type": "SqlServerSource",
-                  "sqlReaderQuery": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}\n",
+                  "sqlReaderQuery": {
+                    "value": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}\n",
+                    "type": "Expression"
+                  },
                   "partitionOption": "None",
                   "queryTimeout": "02:00:00",
                   "datasetSettings": {
@@ -74,7 +84,10 @@
                   "datasetSettings": {
                     "type": "LakehouseTable",
                     "typeProperties": {
-                      "table": "@item().TableName"
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      }
                     },
                     "schema": [],
                     "linkedService": {
@@ -118,6 +131,45 @@
         "dependsOn": [
           {
             "activity": "Lookup DS Fakpol",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8edff220-ca36-bb18-437f-fd6efe0f5beb",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Truncate DS Fakpol",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "71c18ad7-943f-94a3-4ee6-f5a9b4ddb34b",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table DS Fakpol",
+        "dependsOn": [
+          {
+            "activity": "Ingest DS Fakpol",
             "dependencyConditions": [
               "Succeeded"
             ]

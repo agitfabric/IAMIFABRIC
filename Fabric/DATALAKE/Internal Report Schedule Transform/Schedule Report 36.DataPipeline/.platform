@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule Report 36"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "67b90b5f-96f3-9fee-4303-5b208e80fc97"
+  }
+}

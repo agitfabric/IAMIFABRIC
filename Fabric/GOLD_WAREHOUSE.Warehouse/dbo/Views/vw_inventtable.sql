@@ -1,5 +1,5 @@
 -- Auto Generated (Do not modify) 74F2A636B756D7697DEF3855F46D60501E61F86DA91F70B865E705F3B74D9977
-CREATE VIEW [dbo].[vw_inventtable] as (
+CREATE   VIEW [dbo].[vw_inventtable] as (
 select * --count (*) 
 from (
 SELECT 
@@ -17,7 +17,7 @@ SELECT
 	b.ItemGroupId
 FROM
 	SILVER_WAREHOUSE.dbo.ZInventTables a
-left join SILVER_WAREHOUSE.dbo.InventItemGroupItem b on a.dataAreaId=b.ItemDataAreaId and a.ItemId = b.ItemId 
+left join SILVER_WAREHOUSE.dbo.InventItemGroupItem b on a.dataAreaId=LOWER(b.ItemDataAreaId) and a.ItemId = b.ItemId 
 where b.ItemGroupId= 'FU01'
 )x	--and a.AMItemMinorGroupId like '%LT%'
 left JOIN 

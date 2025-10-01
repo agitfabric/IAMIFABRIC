@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule DB PSS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "490015e7-7c14-a274-4d22-7b56e526ddcc"
+  }
+}

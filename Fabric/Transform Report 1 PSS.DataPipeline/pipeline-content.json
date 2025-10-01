@@ -1,0 +1,1901 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Report 1 PSS",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_1_PSS]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "Report 1 PSS SP",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "DECLARE\n\t@GetMaxRunningDate DATE \n\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(cast(max(tanggal_EUS) as date),'2022-01-01')), 0)\n from Report_1 where dealer = 'AI' \n\n\n\t\t\nselect * from Report_1 where cast(tanggal_EUS as date) >= @GetMaxRunningDate AND dealer = 'AI'",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "IAMI_PROD"
+              },
+              "externalReferences": {
+                "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DECLARE\n\t@GetMaxRunningDate DATE \n\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(cast(max(tanggal_EUS) as date),'2022-01-01')), 0)\n from Report_1 where dealer = 'AI' \n\n\n\t\t\ndelete from Report_1 where cast(tanggal_EUS as date) >= @GetMaxRunningDate AND dealer = 'AI'",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "GOLD_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Report_1"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "IsReturn",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "IsReturn",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "sales_tipe",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "sales_tipe",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "dealer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_dealer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Group_Dealer",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Group_Dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Outlet",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Outlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_outlet",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_outlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "area_dealer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "511"
+                },
+                "sink": {
+                  "name": "area_dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "tanggal_Quotation",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "tanggal_Quotation",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "no_quotation",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "no_quotation",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "tanggal_SO",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "tanggal_SO",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "nomer_SO",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nomer_SO",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "status_SO",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "status_SO",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "tanggal_EUS",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "tanggal_EUS",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "nomer_EUS",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nomer_EUS",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "kode_spv",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "kode_spv",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_spv",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_spv",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "kode_sales",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "kode_sales",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_salesman",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_salesman",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "customer_type",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "customer_type",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_customer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_customer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "customer_id",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ktp",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ktp",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Znpwp",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Znpwp",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_customer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_customer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_usaha",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_usaha",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "segmen",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "segmen",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_angkutan",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_angkutan",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jumlah_unit",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "jumlah_unit",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "CV/LCV",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "CV/LCV",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Series",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Series",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "device_class",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "device_class",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Type_Desc",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Type_Desc",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Material_Desc",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Material_Desc",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "engine_no",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "engine_no",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ChassisNumber",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ChassisNumber",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "thn_produksi",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "thn_produksi",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "warna",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "warna",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_aplikasi_karoseri",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_aplikasi_karoseri",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "biaya_karoseri",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "biaya_karoseri",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ItemGroupId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ItemGroupId",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ItemId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ItemId",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ItemNumber",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ItemNumber",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "tahun_pembuatan",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "tahun_pembuatan",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "payment_type",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "payment_type",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_leasing",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_leasing",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "kode_leasing",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "kode_leasing",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_leasing",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_leasing",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "group_leasing",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "group_leasing",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Polreg_number",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Polreg_number",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Polreg_date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Polreg_date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "totalDP",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "totalDP",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "approval_date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "approval_date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "print_date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "print_date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "nama_fakpol",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nama_fakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "area_BBN",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "area_BBN",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "aplikasi_bbn",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "aplikasi_bbn",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "jenis_plat",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "jenis_plat",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Status_pelanggaran",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Status_pelanggaran",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "nomer_pelanggaran",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "nomer_pelanggaran",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Status_CSP",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Status_CSP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "No_CSP",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_CSP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZNeedSDA",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZNeedSDA",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "no_sda",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "no_sda",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "sda_date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "sda_date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Nilai_SDA_Approve",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Nilai_SDA_Approve",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "potongan_sda",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "potongan_sda",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "priceUnitType",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "priceUnitType",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZPRICELIST",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZPRICELIST",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "pricelistType",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "pricelistType",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Harga_Jual_ke_Cust",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Harga_Jual_ke_Cust",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZMinimumDP",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZMinimumDP",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "TotalDisckeCust",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "TotalDisckeCust",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZOtherDiscount",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZOtherDiscount",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZProfitLoss",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZProfitLoss",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZAdjustmentUnit",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZAdjustmentUnit",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZAksesoris",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZAksesoris",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZDiskonBBN",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZDiskonBBN",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZHargaJual",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZHargaJual",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZHargaJualCust",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZHargaJualCust",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZHargaJualKendaraan",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZHargaJualKendaraan",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZHargaUnitExBiaya",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZHargaUnitExBiaya",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZJasaBBN",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZJasaBBN",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZKaroseri",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZKaroseri",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZPriceUnitOnly",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZPriceUnitOnly",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZSelisihPriceUnit",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZSelisihPriceUnit",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZTotalHarga",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZTotalHarga",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "total_bbn",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "total_bbn",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZBBNNotice",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZBBNNotice",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZBBNUnNotice",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZBBNUnNotice",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZBBNKotaKab",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZBBNKotaKab",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZBiayaUbahBentuk",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZBiayaUbahBentuk",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZBungaTOP",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZBungaTOP",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "Zkomisi",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Zkomisi",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZOngkirIAMIDealer",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZOngkirIAMIDealer",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZOngkirDealerCustomer",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "ZOngkirDealerCustomer",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "alamatFakpol",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "alamatFakpol",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "City",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "City",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "provinsi",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "provinsi",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "npwp",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "npwp",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZSIUP",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZSIUP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZTDP",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZTDP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Email",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Email",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "HP",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "HP",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Phone",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Phone",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Tlp_Kantor",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Tlp_Kantor",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Telp",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Telp",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "No_sales_funneling",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_sales_funneling",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Tgl_Funneling",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tgl_Funneling",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "ZDecisionMaker",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZDecisionMaker",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZCompanyName",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZCompanyName",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZDepartment",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZDepartment",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ZGoodType",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "ZGoodType",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Barang_Yang_diangkut",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Barang_Yang_diangkut",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Berat_Yang_diangkut",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "Berat_Yang_diangkut",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedBy",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "CreatedBy",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Kepemilikan_unit",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "Kepemilikan_unit",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "Katagori_customer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Katagori_customer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Status_Customer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Status_Customer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Status",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Status",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "NPK_Salesman",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "NPK_Salesman",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "NPK_Supervisor",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "NPK_Supervisor",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Tgl_Kirim_Karoseri",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tgl_Kirim_Karoseri",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Tgl_Kirim_Customer",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tgl_Kirim_Customer",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Tgl_Jadi_STNK",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tgl_Jadi_STNK",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "NO_Polisi",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "20"
+                },
+                "sink": {
+                  "name": "NO_Polisi",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "No_STNK",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "60"
+                },
+                "sink": {
+                  "name": "No_STNK",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "STNK_Date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "STNK_Date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Tgl_Jadi_BPKB",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tgl_Jadi_BPKB",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "No_BPKB",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_BPKB",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "BPKB_Date",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "BPKB_Date",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Tanggal_Serah_terima_STNK",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tanggal_Serah_terima_STNK",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "Tanggal_Serah_terima_BPKB",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Tanggal_Serah_terima_BPKB",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "No_Vendor_Expedsi",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_Vendor_Expedsi",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Nama_Vendor_Expedsi",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Nama_Vendor_Expedsi",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Alamat_vendor_Expedisi",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Alamat_vendor_Expedisi",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "No_Vendor_BBn",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_Vendor_BBn",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Nama_vendor_BBn",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Nama_vendor_BBn",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "alamat_vendor_bbn",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "alamat_vendor_bbn",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "No_Vendor_Karoseri",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "No_Vendor_Karoseri",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Nama_vendor_Karoseri",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Nama_vendor_Karoseri",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "alamat_vendor_karoseri",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "alamat_vendor_karoseri",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedBy1",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "CreatedBy1",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CreatedDateTime1",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "CreatedDateTime1",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "MaskingName",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "MaskingName",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

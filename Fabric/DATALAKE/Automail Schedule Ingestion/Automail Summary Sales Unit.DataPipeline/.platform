@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Automail Summary Sales Unit"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3c64269c-63d3-9bff-4ed7-56efefa136a8"
+  }
+}

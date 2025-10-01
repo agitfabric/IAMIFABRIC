@@ -24,5 +24,6 @@ CREATE TABLE [dbo].[ZInventSites] (
 	[ZProvinsi] varchar(8000) NULL, 
 	[ZTelp] varchar(8000) NULL, 
 	[Last_update] datetime2(6) NULL, 
-	[Group_Dealer] varchar(8000) NULL
+	[Group_Dealer] varchar(8000) NULL, 
+	[SiteCategory] varchar(20) NULL
 );

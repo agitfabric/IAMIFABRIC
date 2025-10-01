@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Transform Fakpol PSS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4a256ac1-d6f1-a080-41f6-29d2cf2a6d18"
+  }
+}

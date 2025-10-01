@@ -1,0 +1,707 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            },
+            "storeSettings": {
+              "type": "FileServerReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "datasetSettings": {
+              "type": "DelimitedText",
+              "typeProperties": {
+                "location": {
+                  "type": "FileServerLocation",
+                  "folderPath": "iamidatalkeoutbu",
+                  "fileName": "Out_IAMI_DataLake_SalesUnt&EUS_20250826-132538-476.csv"
+                },
+                "columnDelimiter": ";",
+                "quoteChar": "\"",
+                "escapeChar": "\\",
+                "firstRowAsHeader": true
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "698c928b-a179-41b2-93a1-998fd48a6468"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "applyVOrder": true,
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "get Summary Sales Unit",
+        "description": "Dataset YTD mengacu pada kolom Year untuk me replace data\n",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "0b1567c1-5e93-438f-8096-f30847f67f99",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "delete from SILVER_WAREHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT where Year in (select distinct Year from BRONZE_LAKEHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT)",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "SILVER_WAREHOUSE",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "update to silver",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "REFRESH METADATA",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "GetMetadata",
+        "typeProperties": {
+          "datasetSettings": {
+            "type": "Binary",
+            "typeProperties": {
+              "location": {
+                "type": "FileServerLocation",
+                "folderPath": "iamidatalkeout"
+              }
+            },
+            "externalReferences": {
+              "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+            },
+            "annotations": []
+          },
+          "fieldList": [
+            "childItems"
+          ],
+          "storeSettings": {
+            "type": "FileServerReadSettings",
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          },
+          "formatSettings": {
+            "type": "BinaryReadSettings"
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "listFile",
+        "dependsOn": [
+          {
+            "activity": "update to silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@json(activity('sortedFile').output.result.exitValue)\n",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@startsWith(item(), 'Out_SalesUnt&EUS_')",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DelimitedTextSource",
+                        "formatSettings": {
+                          "type": "DelimitedTextReadSettings"
+                        },
+                        "storeSettings": {
+                          "type": "FileServerReadSettings",
+                          "recursive": true,
+                          "enablePartitionDiscovery": false
+                        },
+                        "datasetSettings": {
+                          "type": "DelimitedText",
+                          "typeProperties": {
+                            "location": {
+                              "type": "FileServerLocation",
+                              "folderPath": "iamidatalkeout",
+                              "fileName": {
+                                "value": "@item()",
+                                "type": "Expression"
+                              }
+                            },
+                            "columnDelimiter": ";",
+                            "quoteChar": "\"",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true
+                          },
+                          "schema": [],
+                          "externalReferences": {
+                            "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "DelimitedTextSink",
+                        "formatSettings": {
+                          "type": "DelimitedTextWriteSettings",
+                          "fileExtension": ".txt"
+                        },
+                        "storeSettings": {
+                          "type": "FileServerWriteSettings"
+                        },
+                        "datasetSettings": {
+                          "type": "DelimitedText",
+                          "typeProperties": {
+                            "location": {
+                              "type": "FileServerLocation",
+                              "folderPath": "iamidatalkeoutbu",
+                              "fileName": {
+                                "value": "@item()",
+                                "type": "Expression"
+                              }
+                            },
+                            "columnDelimiter": ";",
+                            "quoteChar": "\"",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true
+                          },
+                          "schema": [],
+                          "externalReferences": {
+                            "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": false
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Copy data file",
+                    "dependsOn": [
+                      {
+                        "activity": "update to silver_copy1",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Delete",
+                    "typeProperties": {
+                      "enableLogging": false,
+                      "datasetSettings": {
+                        "type": "Binary",
+                        "typeProperties": {
+                          "location": {
+                            "type": "FileServerLocation",
+                            "folderPath": "iamidatalkeout",
+                            "fileName": {
+                              "value": "@item()",
+                              "type": "Expression"
+                            }
+                          }
+                        },
+                        "externalReferences": {
+                          "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+                        },
+                        "annotations": []
+                      },
+                      "storeSettings": {
+                        "type": "FileServerReadSettings",
+                        "recursive": false,
+                        "enablePartitionDiscovery": false
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Delete file",
+                    "dependsOn": [
+                      {
+                        "activity": "Copy data file",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DelimitedTextSource",
+                        "formatSettings": {
+                          "type": "DelimitedTextReadSettings"
+                        },
+                        "storeSettings": {
+                          "type": "FileServerReadSettings",
+                          "recursive": true,
+                          "wildcardFolderPath": "iamidatalkeout",
+                          "wildcardFileName": {
+                            "value": "@item()\n",
+                            "type": "Expression"
+                          },
+                          "enablePartitionDiscovery": false
+                        },
+                        "datasetSettings": {
+                          "type": "DelimitedText",
+                          "typeProperties": {
+                            "location": {
+                              "type": "FileServerLocation"
+                            },
+                            "columnDelimiter": ";",
+                            "quoteChar": "\"",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true
+                          },
+                          "schema": [],
+                          "externalReferences": {
+                            "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "DataWarehouseSink",
+                        "preCopyScript": "delete from BRONZE_WAREHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT",
+                        "allowCopyCommand": true,
+                        "copyCommandSettings": {},
+                        "disableMetricsCollection": false,
+                        "datasetSettings": {
+                          "type": "DataWarehouseTable",
+                          "typeProperties": {
+                            "schema": "dbo",
+                            "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+                          },
+                          "schema": [],
+                          "linkedService": {
+                            "name": "BRONZE_WAREHOUSE",
+                            "properties": {
+                              "type": "DataWarehouse",
+                              "typeProperties": {
+                                "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                                "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                                "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "get Summary Sales Unit_copy1",
+                    "description": "Dataset YTD mengacu pada kolom Year untuk me replace data\n",
+                    "dependsOn": [
+                      {
+                        "activity": "outputan nama file",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DataWarehouseSource",
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00",
+                        "datasetSettings": {
+                          "type": "DataWarehouseTable",
+                          "typeProperties": {
+                            "schema": "dbo",
+                            "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+                          },
+                          "schema": [],
+                          "linkedService": {
+                            "name": "BRONZE_WAREHOUSE",
+                            "properties": {
+                              "type": "DataWarehouse",
+                              "typeProperties": {
+                                "artifactId": "1da72b2b-3783-49c8-a009-7d573abfa5e5",
+                                "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                                "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "DataWarehouseSink",
+                        "preCopyScript": "delete from SILVER_WAREHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT where Year in (select distinct Year from BRONZE_WAREHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT) and Month in (select distinct Month from BRONZE_WAREHOUSE.dbo.AUTOMAIL_SUMMARY_SALES_UNIT)",
+                        "allowCopyCommand": true,
+                        "copyCommandSettings": {},
+                        "disableMetricsCollection": false,
+                        "datasetSettings": {
+                          "type": "DataWarehouseTable",
+                          "typeProperties": {
+                            "schema": "dbo",
+                            "table": "AUTOMAIL_SUMMARY_SALES_UNIT"
+                          },
+                          "schema": [],
+                          "linkedService": {
+                            "name": "SILVER_WAREHOUSE",
+                            "properties": {
+                              "type": "DataWarehouse",
+                              "typeProperties": {
+                                "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                                "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                                "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "update to silver_copy1",
+                    "dependsOn": [
+                      {
+                        "activity": "REFRESH METADATA_copy1",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      },
+                      {
+                        "activity": "get Summary Sales Unit_copy1",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "TridentNotebook",
+                    "typeProperties": {
+                      "notebookId": "4222570d-e7bd-4a8f-9b7c-e8cb85d14ebc",
+                      "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "REFRESH METADATA_copy1",
+                    "state": "Inactive",
+                    "onInactiveMarkAs": "Succeeded",
+                    "dependsOn": [
+                      {
+                        "activity": "get Summary Sales Unit_copy1",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "nama file",
+                      "value": {
+                        "value": "@item()",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "outputan nama file",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": []
+              },
+              "name": "If Condition1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "sortedFile",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_AUTOMAIL_SUMMARY_SALES_UNIT]"
+        },
+        "linkedService": {
+          "name": "SILVER_WAREHOUSE",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Stored procedure1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "4222570d-e7bd-4a8f-9b7c-e8cb85d14ebc",
+          "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "REFRESH METADATA",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "get Summary Sales Unit",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5314bb55-28dc-8234-4a20-7abb34d0bd59",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "fileList": {
+              "value": {
+                "value": "@string(activity('listFile').output.childItems)\n",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "sortedFile",
+        "dependsOn": [
+          {
+            "activity": "listFile",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "sortedVariable": {
+        "type": "Array"
+      },
+      "nama file": {
+        "type": "String"
+      }
+    }
+  }
+}

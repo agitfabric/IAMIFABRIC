@@ -1,4 +1,4 @@
-CREATE PROCEDURE SP_REPORT_32 AS
+CREATE               PROCEDURE [dbo].[SP_REPORT_32] AS
 
 DECLARE @GetMaxRunningDate DATE = ISNULL(
     (SELECT MAX(CAST(PO_Date AS DATE)) FROM GOLD_WAREHOUSE.dbo.Report_32 WHERE DealerCategory = 'NON-AI'),
@@ -10,19 +10,19 @@ DECLARE @GetCurrentDate DATE = CAST(GETDATE() AS DATE);
 WITH YearMonths AS (
     SELECT DISTINCT LEFT(CONVERT(CHAR(8), DatePhysical, 112), 6) AS YearMonth
     FROM SILVER_WAREHOUSE.dbo.InventTrans
-    WHERE dataAreaId != 'kzu'
+    WHERE lower(dataAreaId) != 'kzu'
       AND CAST(DatePhysical AS DATE) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
 )
-SELECT * INTO #TempYearMonth FROM YearMonths;
+SELECT * INTO #TempYearMonthReport32 FROM YearMonths;
 
 -- Inisialisasi variabel loop
 DECLARE @LoopYearMonth CHAR(6);
 DECLARE @StarDate DATE, @MaxDate DATE;
 
 -- Looping per bulan
-WHILE EXISTS (SELECT TOP 1 1 FROM #TempYearMonth)
+WHILE EXISTS (SELECT TOP 1 1 FROM #TempYearMonthReport32)
 BEGIN
-    SELECT TOP 1 @LoopYearMonth = YearMonth FROM #TempYearMonth ORDER BY YearMonth;
+    SELECT TOP 1 @LoopYearMonth = YearMonth FROM #TempYearMonthReport32 ORDER BY YearMonth;
 
     SET @StarDate = DATEADD(MONTH, 1, DATEADD(YEAR, -1, DATEADD(MONTH, DATEDIFF(MONTH, '19000101', @LoopYearMonth + '01'), '19000101')));
     SET @MaxDate  = DATEADD(DAY, -1, DATEADD(MONTH, 1, @LoopYearMonth + '01'));
@@ -33,21 +33,21 @@ BEGIN
 
     INSERT INTO Report_32
     SELECT  
-        a.ORDERACCOUNT AS Vendor_ID, 
-        a.PURCHNAME AS Vendor_Name, 
+        a.OrderAccount AS Vendor_ID, 
+        a.PurchName AS Vendor_Name, 
         a.CreatedDateTime1 AS PO_Date, 
-        a.PURCHID AS PO_Number,
+        a.PurchId AS PO_Number,
         'NON-AI' AS DealerCategory,
         a.dataAreaId AS dealer,
         l.Description AS nama_dealer,
-        a.INVENTSITEID AS Outlet,	
+        a.InventSiteId AS Outlet,	
         f.Name AS Nama_outlet,
         b.PurchaseOrderLineStatus AS StatusPO,
         b.ItemNumber AS Part_Number, 
         b.LineDescription AS Description, 
         b.OrderedPurchaseQuantity AS Qty_PO, 
         c.InvoiceId,
-        c.Origpurchid,
+        c.OrigPurchId,
         c.PurchaseLineLineNumber,
         c.Qty AS Qty_Invoice_GR, 
         i.DocumentDateGMTPlus7 AS Invoice_Date,
@@ -58,26 +58,26 @@ BEGIN
         b.LineAmount AS Amount_PO					
     FROM SILVER_WAREHOUSE.dbo.PurchaseOrderHeaderV2 a
     LEFT JOIN SILVER_WAREHOUSE.dbo.PurchaseOrderLineV2 b 
-        ON b.PurchaseOrderNumber = a.PurchId AND b.dataAreaId = a.dataAreaId 
+        ON LOWER(b.PurchaseOrderNumber) = LOWER(a.PurchId) AND LOWER(b.dataAreaId) = LOWER(a.dataAreaId) 
     LEFT JOIN (
         SELECT DISTINCT 
-            x.OrigPurchId, x.dataAreaId, x.PurchaseLineLineNumber, x.Qty, x.InvoiceId
-        FROM ZVendInvoiceTrans x 
-        INNER JOIN ZVendInvoiceJours y ON x.InvoiceId = y.InvoiceId
-    ) c ON c.OrigPurchId = b.PurchaseOrderNumber 
-        AND c.dataAreaId = b.dataAreaId 
-        AND c.PurchaseLineLineNumber = b.LineNumber
-    LEFT JOIN PurchaseType e 
-        ON e.PurchaseOrderType = a.ZPurchaseType AND e.dataAreaId = a.dataAreaId
+            LOWER(x.OrigPurchId) as OrigPurchId, LOWER(x.dataAreaId) as dataAreaId, LOWER(x.PurchaseLineLineNumber) as PurchaseLineLineNumber, x.Qty, y.InvoiceDate,LOWER(x.InvoiceId) as InvoiceId
+        FROM SILVER_WAREHOUSE.dbo.ZVendInvoiceTrans x 
+        INNER JOIN SILVER_WAREHOUSE.dbo.ZVendInvoiceJours y ON LOWER(x.InvoiceId) = LOWER(y.InvoiceId)
+    ) c ON LOWER(c.OrigPurchId) = LOWER(b.PurchaseOrderNumber)
+        AND LOWER(c.dataAreaId) = LOWER(b.dataAreaId) 
+        AND LOWER(c.PurchaseLineLineNumber) = LOWER(b.LineNumber)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.PurchaseType e 
+        ON LOWER(e.PurchaseOrderType) = LOWER(a.ZPurchaseType) AND LOWER(e.dataAreaId) = LOWER(a.dataAreaId)
     LEFT JOIN (
         SELECT o.ZIAMIArea , o.SiteId, o.Name 
-        FROM ZInventSites o 
-        INNER JOIN AddressState p ON o.ZProvinsi = p.State
-    ) f ON f.SiteId = a.InventSiteId 
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ledger l ON l.name = a.dataAreaId 
-    LEFT JOIN SILVER_WAREHOUSE.dbo.ZVendInvoiceInfoTable i ON i.Num = c.InvoiceId
-    WHERE b.PurchaseOrderLineStatus = 'Invoiced'
-      AND a.PurchaseOrderPoolId IN ('SP') 
+        FROM SILVER_WAREHOUSE.dbo.ZInventSites o 
+        INNER JOIN SILVER_WAREHOUSE.dbo.AddressState p ON LOWER(o.ZProvinsi) = LOWER(p.State)
+    ) f ON LOWER(f.SiteId) = LOWER(a.InventSiteId)
+    LEFT JOIN SILVER_WAREHOUSE.dbo.Ledger l ON LOWER(l.Name) = LOWER(a.dataAreaId) 
+    LEFT JOIN SILVER_WAREHOUSE.dbo.ZVendInvoiceInfoTable i ON LOWER(i.Num) = LOWER(c.InvoiceId)
+    WHERE LOWER(b.PurchaseOrderLineStatus) = 'invoiced'
+      AND UPPER(a.PurchaseOrderPoolId) IN ('SP') 
       AND CAST(a.CreatedDateTime1 AS DATE) BETWEEN @StarDate AND @MaxDate;
 
     DELETE FROM GOLD_WAREHOUSE.dbo.Report_32_Summary 
@@ -85,15 +85,15 @@ BEGIN
 
     INSERT INTO GOLD_WAREHOUSE.dbo.Report_32_Summary
     SELECT 
-        PO_Date, Outlet, PurchID, Description, DealerCategory,
-        Vendor_Name, Part_Number, SUM(Amount_PO) AS Amount_PO
+        PO_Date, Outlet as Outlet, PurchID as PurchID, Description as Description, DealerCategory,
+        Vendor_Name as Vendor_Name, Part_Number as Part_Number, SUM(Amount_PO) AS Amount_PO
     FROM GOLD_WAREHOUSE.dbo.Report_32
     WHERE PO_Date BETWEEN @StarDate AND @MaxDate
       AND DealerCategory = 'NON-AI'
     GROUP BY PO_Date, Outlet, PurchID, Description, DealerCategory, Vendor_Name, Part_Number;
 
     -- Hapus yearmonth yang sudah diproses
-    DELETE FROM #TempYearMonth WHERE YearMonth = @LoopYearMonth;
+    DELETE FROM #TempYearMonthReport32 WHERE YearMonth = @LoopYearMonth;
 END
 
-DROP TABLE #TempYearMonth;
+DROP TABLE #TempYearMonthReport32;

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Transform Report 44 Revenue"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7071fbe9-4d69-9aa9-490b-37ae65988a34"
+  }
+}

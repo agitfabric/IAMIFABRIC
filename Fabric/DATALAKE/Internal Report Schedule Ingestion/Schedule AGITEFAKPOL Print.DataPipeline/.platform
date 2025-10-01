@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule AGITEFAKPOL Print"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "757a536e-6b5d-853f-489a-994d6ab4a225"
+  }
+}

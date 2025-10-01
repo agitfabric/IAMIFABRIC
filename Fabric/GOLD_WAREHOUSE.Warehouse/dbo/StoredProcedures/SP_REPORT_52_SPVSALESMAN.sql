@@ -1,40 +1,52 @@
 CREATE PROCEDURE [dbo].[SP_REPORT_52_SPVSALESMAN] 
-
 AS
 BEGIN
 
-	SET NOCOUNT ON;
-	   
-	   
-	DECLARE @RunningDate CHAR(6)
+    SET NOCOUNT ON;
+       
+    DECLARE @RunningDate CHAR(6);
 
--- contoh set manual, atau ini dipanggil dari luar
--- SET @RunningDate = FORMAT(GETDATE(), 'yyyyMM')
-	
-	Update Report_52_SPVSalesman
-	Set LastSales = Case 
-			when FirstDateOutlet < JoinDate then Isnull(c.LastSales, a.JoinDate) 
-			else Isnull(c.LastSales, b.FirstDateOutlet) 
-		end,
-		Idle = Case 
-			when FirstDateOutlet < JoinDate then DATEDIFF(month, Isnull(c.LastSales, a.JoinDate), @RunningDate+'01') 
-			else DATEDIFF(month, Isnull(c.LastSales, b.FirstDateOutlet), @RunningDate+'01') 
-		end
+    -- contoh set otomatis, offset ke Jakarta
+    --SET @RunningDate = FORMAT(DATEADD(HOUR,7,GETDATE()), 'yyyyMM');
 
-	From Report_52_SPVSalesman a
-		Left join (select  Min(DATEADD(d, 1, EOMONTH(DatePhysical))) FirstDateOutlet , b.InventSiteId
-					from SILVER_WAREHOUSE.dbo.InventTrans a
-						left join SILVER_WAREHOUSE.dbo.Dim b on b.inventDimId = a.inventDimId
-					Where cast(DatePhysical as date) > '1900-01-01' 
-					Group by b.InventSiteId)b on b.InventSiteId = a.OUTLET
-		Left join (SELECT Cast(Max(a.InvoiceDate) as Date) LastSales, ZSalesman
-				FROM SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans a
-				LEFT OUTER JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem AS b   ON b.ItemId = a.ItemId  AND b.ItemDataAreaId = a.dataAreaId 
-				LEFT OUTER JOIN SILVER_WAREHOUSE.dbo.ZSalesOrderHeader AS c  ON c.SalesId = a.SalesId  
-				WHERE lower(a.dataAreaId) <> 'kzu'  
-					and c.ZSalesType = 'FU'	and b.ItemGroupId = 'FU01'
-					and Left(convert(char,a.InvoiceDate,112),6) <= @RunningDate 
-					Group by ZSalesman) c on c.ZSalesman = a.USERIDSALESMAN
-	Where RunningDate = @RunningDate 
-	   
+    Update Report_52_SPVSalesman
+    Set LastSales = Case 
+            when FirstDateOutlet < JoinDate 
+                then ISNULL(c.LastSales, a.JoinDate) 
+            else ISNULL(c.LastSales, b.FirstDateOutlet) 
+        end,
+        Idle = Case 
+            when FirstDateOutlet < JoinDate 
+                then DATEDIFF(month, ISNULL(c.LastSales, a.JoinDate), @RunningDate + '01') 
+            else DATEDIFF(month, ISNULL(c.LastSales, b.FirstDateOutlet), @RunningDate + '01') 
+        end
+    From Report_52_SPVSalesman a
+        Left join (
+            select MIN(DATEADD(d, 1, EOMONTH(DatePhysical))) FirstDateOutlet, 
+                   b.InventSiteId
+            from SILVER_WAREHOUSE.dbo.InventTrans a
+                left join SILVER_WAREHOUSE.dbo.Dim b 
+                    on LOWER(b.inventDimId) COLLATE Latin1_General_CI_AS = LOWER(a.inventDimId) COLLATE Latin1_General_CI_AS
+            where cast(DatePhysical as date) > '1900-01-01' 
+            group by b.InventSiteId
+        ) b 
+            on b.InventSiteId COLLATE Latin1_General_CI_AS = a.Outlet COLLATE Latin1_General_CI_AS
+        Left join (
+            select CAST(MAX(a.InvoiceDate) as Date) LastSales, 
+                   ZSalesman
+            from SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans a
+                left outer join SILVER_WAREHOUSE.dbo.InventItemGroupItem b   
+                    on LOWER(b.ItemId) COLLATE Latin1_General_CI_AS = LOWER(a.ItemId) COLLATE Latin1_General_CI_AS  
+                   and LOWER(b.ItemDataAreaId) COLLATE Latin1_General_CI_AS = LOWER(a.dataAreaId) COLLATE Latin1_General_CI_AS
+                left outer join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader c  
+                    on LOWER(c.SalesId) COLLATE Latin1_General_CI_AS = LOWER(a.SalesId) COLLATE Latin1_General_CI_AS
+            where a.dataAreaId COLLATE Latin1_General_CI_AS <> 'kzu'
+              and c.ZSalesType COLLATE Latin1_General_CI_AS = 'FU'
+              and b.ItemGroupId COLLATE Latin1_General_CI_AS = 'FU01'
+              and LEFT(CONVERT(char, a.InvoiceDate, 112), 6) <= @RunningDate
+            group by ZSalesman
+        ) c 
+            on LOWER(c.ZSalesman) COLLATE Latin1_General_CI_AS = LOWER(a.USERIDSALESMAN) COLLATE Latin1_General_CI_AS
+    where RunningDate COLLATE Latin1_General_CI_AS = @RunningDate COLLATE Latin1_General_CI_AS;
+
 END

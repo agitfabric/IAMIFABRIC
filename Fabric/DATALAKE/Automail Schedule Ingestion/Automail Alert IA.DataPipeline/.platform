@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Automail Alert IA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0299225c-3f55-9fe1-474f-d77704b023e1"
+  }
+}

@@ -1,4 +1,4 @@
-create procedure SP_INGEST_AGITEFAKPOL_PRINT AS
+CREATE procedure SP_INGEST_AGITEFAKPOL_PRINT AS
 
 
 -- Step 1: Update baris yang sudah ada di SILVER dengan data dari BRONZE
@@ -31,9 +31,9 @@ SET
     target.KodePosFakpol = source.KodePosFakpol,
     target.Email = source.Email,
     target.Color = source.Color,
-    target.Engine_Number = source.EngineNumber
+    target.Engine_Number = source.Engine_Number
 FROM SILVER_WAREHOUSE.dbo.AGITEFakpol AS target
-JOIN BRONZE_LAKEHOUSE.dbo.AGITEFakpol AS source
+JOIN BRONZE_WAREHOUSE.dbo.AGITEFakpol AS source
     ON source.ChassisNumber = target.ChassisNumber;
 
 
@@ -51,8 +51,8 @@ SELECT
     source.City, source.TanggalPengajuanFakpol, source.NoPengajuanFakpol, source.CreatedDate, 
     source.ApprovalDate, source.PrintedDate, source.TglFakpol, source.NoFakpol, source.StatusFakpol, 
     source.NamaFakpol, source.AlamatFakpol, source.CityFakpol, source.KecamatanFakpol, 
-    source.KelurahanFakpol, source.KodePosFakpol, source.Email, source.Color, source.EngineNumber as Engine_Number
-FROM BRONZE_LAKEHOUSE.dbo.AGITEFakpol AS source
+    source.KelurahanFakpol, source.KodePosFakpol, source.Email, source.Color, source.Engine_Number
+FROM BRONZE_WAREHOUSE.dbo.AGITEFakpol AS source
 LEFT JOIN SILVER_WAREHOUSE.dbo.AGITEFakpol AS target
     ON source.ChassisNumber = target.ChassisNumber
 WHERE target.ChassisNumber IS NULL;

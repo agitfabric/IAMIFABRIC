@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup Report 27",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate Table Report 27",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -52,7 +59,10 @@
               "typeProperties": {
                 "source": {
                   "type": "SqlServerSource",
-                  "sqlReaderQuery": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}",
+                  "sqlReaderQuery": {
+                    "value": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}",
+                    "type": "Expression"
+                  },
                   "partitionOption": "None",
                   "queryTimeout": "02:00:00",
                   "datasetSettings": {
@@ -74,7 +84,10 @@
                   "datasetSettings": {
                     "type": "LakehouseTable",
                     "typeProperties": {
-                      "table": "@item().TableName"
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      }
                     },
                     "schema": [],
                     "linkedService": {
@@ -118,6 +131,45 @@
         "dependsOn": [
           {
             "activity": "Lookup Report 27",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "214fd501-cdd6-8e27-4115-6b66d740ec19",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Truncate Table Report 27",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "627070df-4b49-a792-4b99-b777baeeffa4",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table Report 27",
+        "dependsOn": [
+          {
+            "activity": "Ingest Report 27",
             "dependencyConditions": [
               "Succeeded"
             ]

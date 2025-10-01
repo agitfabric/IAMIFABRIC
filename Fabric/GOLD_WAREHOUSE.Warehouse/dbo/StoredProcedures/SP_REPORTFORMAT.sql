@@ -4,6 +4,6 @@ BEGIN
 
 Delete ReportFormat
 insert into ReportFormat
-select * from SILVER_WAREHOUSE.dbo.REPORTFORMAT
+select * from SILVER_WAREHOUSE.dbo.ReportFormat
 
 END

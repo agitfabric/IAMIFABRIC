@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_REPORT_33_PSS]
+CREATE   PROCEDURE [dbo].[SP_REPORT_33_PSS]
 AS
 
     DECLARE 
@@ -12,7 +12,7 @@ AS
     WITH YearMonths AS (
         SELECT DISTINCT LEFT(CONVERT(char, DatePhysical, 112), 6) AS YearMonth
         FROM SILVER_WAREHOUSE.dbo.InventTrans
-        WHERE dataAreaId != 'kzu' 
+        WHERE LOWER(dataAreaId) != 'kzu' 
           AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
     )SELECT * INTO #TempYearMonthReport33PSS FROM YearMonths;
 
@@ -60,10 +60,10 @@ BEGIN
 					z.Area, getdate()  as last_Update,
 					m.MaskedName MaskingName
 				FROM SILVER_WAREHOUSE.dbo.sparepart_salesOrder sso 
-				LEFT JOIN SILVER_WAREHOUSE.dbo.sparepart_invoiceSO sis ON sso.data_items_itemNo = sis.data_items_item AND sso.data_site = sis.data_site AND sso.data_salesOrderNo = sis.data_salesOrderNo 
-				LEFT JOIN SILVER_WAREHOUSE.dbo.site_mapping sm ON sm.SiteCodePSS = sso.data_site 
-				LEFT JOIN SILVER_WAREHOUSE.dbo.ZAISITES z  ON z.SiteCode  = sm.SiteCode 
-				LEFT JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem t on t.ItemId = sso.data_items_itemNo and t.ItemDataAreaId = 'zir'
+				LEFT JOIN SILVER_WAREHOUSE.dbo.sparepart_invoiceSO sis ON LOWER(sso.data_items_itemNo) = LOWER(sis.data_items_item) AND LOWER(sso.data_site) = LOWER(sis.data_site) AND LOWER(sso.data_salesOrderNo) = LOWER(sis.data_salesOrderNo) 
+				LEFT JOIN SILVER_WAREHOUSE.dbo.site_mapping sm ON LOWER(sm.SiteCodePSS) = LOWER(sso.data_site) 
+				LEFT JOIN SILVER_WAREHOUSE.dbo.ZAISITES z  ON LOWER(z.SiteCode)  = LOWER(sm.SiteCode) 
+				LEFT JOIN SILVER_WAREHOUSE.dbo.InventItemGroupItem t on LOWER(t.ItemId) = LOWER(sso.data_items_itemNo) and LOWER(t.ItemDataAreaId) = 'zir'
 				CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(sso.data_name) as m
 				WHERE CAST(sso.data_createdTime AS DATE) BETWEEN @StartDate AND @MaxDate
 				--WHERE cast(sso.data_createdTime as date) between @StarDate and @MaxDate

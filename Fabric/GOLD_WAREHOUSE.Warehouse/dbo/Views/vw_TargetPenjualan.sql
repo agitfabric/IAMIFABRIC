@@ -1,5 +1,5 @@
 -- Auto Generated (Do not modify) 72195E1B96F77BBA8D248BDACBD3A1014EAB49A304722E03E5B4891798D5A230
-CREATE VIEW [dbo].[vw_TargetPenjualan]
+CREATE   VIEW [dbo].[vw_TargetPenjualan]
 AS
 with TargetSaleslatest as ( 
 SELECT *, ROW_NUMBER() OVER (PARTITION BY SiteCode, YearPeriod, MonthPeriod, FuncAreaId ORDER BY CreatedOn DESC) as rn from SILVER_WAREHOUSE.dbo.TargetSales)
@@ -21,5 +21,5 @@ select  c.DealerCategory, c.DealerCode as dataAreaId, c.DealerName as ZDealerAft
 		b.MinorGroupId, a.TargetSales Target
 from TargetSaleslatest a  
   inner join vw_zInventSite c on c.OutletCode = a.SiteCode
-  left join SILVER_WAREHOUSE.dbo.InventItemMinorGroup b on b.ZSeriesTargetPenjualanValue = a.FuncAreaId and left(a.SiteCode,3) = b.dataAreaId and b.MinorGroupId != 'BISON'
+  left join SILVER_WAREHOUSE.dbo.InventItemMinorGroup b on b.ZSeriesTargetPenjualanValue = a.FuncAreaId and LOWER(left(a.SiteCode,3)) = b.dataAreaId and b.MinorGroupId != 'BISON'
   WHERE c.DealerCategory = 'NON-AI' and a.rn = 1

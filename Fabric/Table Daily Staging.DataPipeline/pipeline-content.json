@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup Table Daily Staging",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "truncate table Daily Stagging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -2198,7 +2205,14 @@
           "secureOutput": false
         },
         "name": "temp_Worker",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "truncate table Daily Stagging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "Copy",
@@ -2833,7 +2847,7 @@
           {
             "activity": "Notebook delete targetsales before insert",
             "dependencyConditions": [
-              "Succeeded"
+              "Completed"
             ]
           }
         ]
@@ -2853,6 +2867,190 @@
         },
         "name": "Notebook delete targetsales before insert",
         "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "ZSalesGroupLine",
+                "database": "IAMI_PROD"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "ZSalesGroupLine"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BRONZE_LAKEHOUSE",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "47f67f99-f308-8096-438f-5e930b1567c1",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "DataAreaId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "DataAreaId",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "Description",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Description",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "SalesGroupId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "SalesGroupId",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "UserIdSalesman",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "UserIdSalesman",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "LastUpdate",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "LastUpdate",
+                  "physicalType": "timestamp"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_kue",
+        "dependsOn": [
+          {
+            "activity": "truncate table Daily Stagging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5223e305-2e17-8377-4b0e-d0d7155fc37f",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "truncate table Daily Stagging",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "aaebc463-c0b1-b6ec-4ed8-59d028778594",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table Daily Stagging",
+        "dependsOn": [
+          {
+            "activity": "Ingest Table Daily Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "temp_Worker",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_kue",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ],
     "variables": {

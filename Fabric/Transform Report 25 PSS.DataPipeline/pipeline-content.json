@@ -1,0 +1,335 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Report 25 PSS",
+        "type": "SqlServerStoredProcedure",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[SP_REPORT_25_PSS]"
+        },
+        "linkedService": {
+          "name": "GOLD_WAREHOUSE",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+              "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+              "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+            }
+          }
+        }
+      },
+      {
+        "name": "REPORT 25 PSS SP",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": "DECLARE\n\t@GetMaxRunningDate DATE,\n\t@GetCurrentDate DATE\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(max(cast(DatePhysical as date)),'2022-01-01')), 0), @GetCurrentDate = cast(getdate()-1 as date) from Report_25 where kode_dealer = 'AI'\n\nSELECT * FROM Report_25 where cast(DatePhysical as date) >= @GetMaxRunningDate AND kode_dealer = 'AI'",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "database": "IAMI_PROD"
+              },
+              "externalReferences": {
+                "connection": "483806d7-f16d-4245-b0f4-4fd666d86213"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "preCopyScript": "DECLARE\n\t@GetMaxRunningDate DATE,\n\t@GetCurrentDate DATE\n\n\nselect @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(max(cast(DatePhysical as date)),'2022-01-01')), 0), @GetCurrentDate = cast(DATEADD(hour,7,getdate()-1) as date) from Report_25 where kode_dealer = 'AI'\n\nDelete Report_25 where cast(DatePhysical as date) >= @GetMaxRunningDate AND kode_dealer = 'AI'",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "GOLD_WAREHOUSE",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                    "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "Report_25"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "DatePhysical",
+                  "type": "DateTime",
+                  "physicalType": "date"
+                },
+                "sink": {
+                  "name": "DatePhysical",
+                  "physicalType": "date"
+                }
+              },
+              {
+                "source": {
+                  "name": "Area",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "255"
+                },
+                "sink": {
+                  "name": "Area",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Nama_Dealer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Nama_Dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Nama_Outlet",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Nama_Outlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Segment_description",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Segment_description",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ItemId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "ItemId",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Type_Description",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Type_Description",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Series",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "Series",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "CV/LCV",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "100"
+                },
+                "sink": {
+                  "name": "CV/LCV",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "wholesale",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "wholesale",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "EUS",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "EUS",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "TransferIn",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "TransferIn",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "TransferOut",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "TransferOut",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "Transactions",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Transactions",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "Beginstock",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Beginstock",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "Endstock",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "Endstock",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "Last_update",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "Last_update",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "kode_outlet",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "10"
+                },
+                "sink": {
+                  "name": "kode_outlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "kode_dealer",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "10"
+                },
+                "sink": {
+                  "name": "kode_dealer",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

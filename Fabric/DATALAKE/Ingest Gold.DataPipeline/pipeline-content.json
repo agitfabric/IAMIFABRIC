@@ -1,0 +1,145 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Lookup Table",
+        "type": "Lookup",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT TableName FROM MAPPING_GOLD_TABLE where Status = 'active' order by TableName asc",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None"
+          },
+          "firstRowOnly": false,
+          "datasetSettings": {
+            "annotations": [],
+            "linkedService": {
+              "name": "SILVER_WAREHOUSE",
+              "properties": {
+                "annotations": [],
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                }
+              }
+            },
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "typeProperties": {}
+          }
+        }
+      },
+      {
+        "name": "Ingest Table to GOLD",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "Lookup Table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lookup Table').output.value",
+            "type": "Expression"
+          },
+          "isSequential": false,
+          "batchCount": 10,
+          "activities": [
+            {
+              "name": "Copy data1",
+              "type": "Copy",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "queryTimeout": "02:00:00",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "type": "SqlServerTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": "dbo",
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      },
+                      "database": "IAMI_PROD"
+                    },
+                    "externalReferences": {
+                      "connection": "36f64b57-a64a-4d1a-8465-3238df5a6960"
+                    }
+                  }
+                },
+                "sink": {
+                  "type": "DataWarehouseSink",
+                  "preCopyScript": {
+                    "value": "delete from @{item().TableName}",
+                    "type": "Expression"
+                  },
+                  "allowCopyCommand": true,
+                  "copyCommandSettings": {},
+                  "disableMetricsCollection": false,
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "GOLD_WAREHOUSE",
+                      "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
+                          "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
+                          "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
+                        }
+                      }
+                    },
+                    "type": "DataWarehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": "dbo",
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "enableStaging": true,
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

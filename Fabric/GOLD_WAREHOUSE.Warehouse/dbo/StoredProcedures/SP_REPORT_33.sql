@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_REPORT_33]
+CREATE   PROCEDURE [dbo].[SP_REPORT_33]
 AS
 
     DECLARE 
@@ -12,7 +12,7 @@ AS
     WITH YearMonths AS (
         SELECT DISTINCT LEFT(CONVERT(char, DatePhysical, 112), 6) AS YearMonth
         FROM SILVER_WAREHOUSE.dbo.InventTrans
-        WHERE dataAreaId != 'kzu' 
+        WHERE LOWER(dataAreaId) != 'kzu' 
           AND CAST(DatePhysical AS date) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
     ) SELECT * INTO #TempYearMonthReport33 FROM YearMonths;
      -- Delete and insert per month range
@@ -73,17 +73,17 @@ BEGIN
 				f.Name as Outlet_Name,
 				f.ZIAMIArea as Area
 			from SILVER_WAREHOUSE.dbo.ZSalesOrderHeader a
-				inner join SILVER_WAREHOUSE.dbo.ZSalesOrderLine b on b.SalesOrderNumber = a.SalesId and b.dataAreaId = a.dataAreaId
-				inner join SILVER_WAREHOUSE.dbo.CustInvoiceJour c on c.SalesId= a.SalesId -- and c.invoiceid is not null
-				left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans d on d.InvoiceId = c.InvoiceId and d.ItemId = b.ItemNumber and d.LineNum = b.LineNum
-				left join SILVER_WAREHOUSE.dbo.AMInventDemandTrans e on e.ZTransactionNumber = b.SalesOrderNumber and e.ItemId = b.ItemNumber and e.ZPosted = 'Yes'
-				left join SILVER_WAREHOUSE.dbo.ZInventSites f on f.SiteId = a.InventSiteId
-				left join SILVER_WAREHOUSE.dbo.Ledger g on a.dataAreaId = g.Name
-				left join SILVER_WAREHOUSE.dbo.SalesQuotationLine h on h.SalesQuotationNumber = a.QuotationNumber and h.ItemNumber = b.ItemNumber and h.LineNum = b.LineNum 
-				inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem i on i.ItemDataAreaId = b.dataAreaId and i.ItemId = b.ItemNumber and i.ItemGroupId in ('SP01','SP02')
+				inner join SILVER_WAREHOUSE.dbo.ZSalesOrderLine b on LOWER(b.SalesOrderNumber) = LOWER(a.SalesId) and LOWER(b.dataAreaId) = LOWER(a.dataAreaId)
+				inner join SILVER_WAREHOUSE.dbo.CustInvoiceJour c on LOWER(c.SalesId)= LOWER(a.SalesId) -- and c.invoiceid is not null
+				left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans d on LOWER(d.InvoiceId) = LOWER(c.InvoiceId) and LOWER(d.ItemId) = LOWER(b.ItemNumber) and LOWER(d.LineNum) = LOWER(b.LineNum)
+				left join SILVER_WAREHOUSE.dbo.AMInventDemandTrans e on LOWER(e.ZTransactionNumber) = LOWER(b.SalesOrderNumber) and LOWER(e.ItemId) = LOWER(b.ItemNumber) and LOWER(e.ZPosted)= 'yes'
+				left join SILVER_WAREHOUSE.dbo.ZInventSites f on LOWER(f.SiteId) = LOWER(a.InventSiteId)
+				left join SILVER_WAREHOUSE.dbo.Ledger g on LOWER(a.dataAreaId) = LOWER(g.Name)
+				left join SILVER_WAREHOUSE.dbo.SalesQuotationLine h on LOWER(h.SalesQuotationNumber) = LOWER(a.QuotationNumber) and LOWER(h.ItemNumber) = LOWER(b.ItemNumber) and LOWER(h.LineNum) = LOWER(b.LineNum) 
+				inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem i on LOWER(i.ItemDataAreaId) = LOWER(b.dataAreaId) and LOWER(i.ItemId) = LOWER(b.ItemNumber) and UPPER(i.ItemGroupId) in ('SP01','SP02')
 				CROSS APPLY SILVER_WAREHOUSE.dbo.name_masking_function(a.SalesName) as m
 			where   
-						a.SalesOrderPoolId = 'SP' AND CAST(c.InvoiceDate AS DATE) BETWEEN @StarDate AND @MaxDate
+						UPPER(a.SalesOrderPoolId) = 'SP' AND CAST(c.InvoiceDate AS DATE) BETWEEN @StarDate AND @MaxDate
 			Group by 
 					a.ZCreatedDateTime, 
 					a.InvoiceAccount, m.MaskedName, a.SalesId, 

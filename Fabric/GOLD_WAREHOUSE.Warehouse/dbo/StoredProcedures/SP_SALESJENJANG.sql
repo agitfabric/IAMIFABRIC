@@ -4,6 +4,6 @@ BEGIN
 
 Delete SalesJenjang
 insert into SalesJenjang
-select * from SILVER_WAREHOUSE.dbo.SALESJENJANG
+select * from SILVER_WAREHOUSE.dbo.SalesJenjang
 
 END

@@ -1,4 +1,4 @@
 CREATE TABLE [dbo].[Calendar] (
 
-	[CalendarDate] date NULL
+	[CalendarDate] datetime2(6) NULL
 );

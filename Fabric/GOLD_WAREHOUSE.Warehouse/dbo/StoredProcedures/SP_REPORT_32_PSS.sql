@@ -1,4 +1,4 @@
-CREATE PROCEDURE SP_REPORT_32_PSS AS
+CREATE     PROCEDURE SP_REPORT_32_PSS AS
 
 DECLARE @GetMaxRunningDate DATE = ISNULL(
     (SELECT MAX(CAST(PO_Date AS DATE)) FROM GOLD_WAREHOUSE.dbo.Report_32 WHERE DealerCategory = 'AI'),
@@ -10,7 +10,7 @@ DECLARE @GetCurrentDate DATE = CAST(GETDATE() AS DATE);
 WITH YearMonths AS (
     SELECT DISTINCT LEFT(CONVERT(CHAR(8), DatePhysical, 112), 6) AS YearMonth
     FROM SILVER_WAREHOUSE.dbo.InventTrans
-    WHERE dataAreaId != 'kzu'
+    WHERE LOWER(dataAreaId) != 'kzu'
       AND CAST(DatePhysical AS DATE) BETWEEN @GetMaxRunningDate AND @GetCurrentDate
 )
 SELECT * INTO #TempYearMonth_32_PSS FROM YearMonths;
@@ -56,18 +56,18 @@ BEGIN
         d.Area AS Area, 
         GETDATE() AS Last_update, 
         NULL AS Amount_PO
-    FROM SILVER_WAREHOUSE.dbo.sparepart_purchaseOrderPart a
-    LEFT JOIN SILVER_WAREHOUSE.dbo.sparepart_invoicePurchaseOrder b 
-        ON b.data_salesOrderNo = a.data_poNo 
-       AND b.data_items_item = a.data_items_itemNo
+    FROM SILVER_WAREHOUSE.dbo.Sparepart_purchaseOrderPart a
+    LEFT JOIN SILVER_WAREHOUSE.dbo.Sparepart_invoicePurchaseOrder b 
+        ON LOWER(b.data_salesOrderNo) = LOWER(a.data_poNo)
+       AND LOWER(b.data_items_item) = LOWER(a.data_items_itemNo)
     LEFT JOIN SILVER_WAREHOUSE.dbo.site_mapping c 
-        ON c.SiteCodePSS = a.data_site
+        ON LOWER(c.SiteCodePSS) = LOWER(a.data_site)
     LEFT JOIN SILVER_WAREHOUSE.dbo.ZAISITES d 
-        ON d.SiteCode = c.SiteCode
+        ON LOWER(d.SiteCode) = LOWER(c.SiteCode)
     LEFT JOIN SILVER_WAREHOUSE.dbo.PurchaseType e 
-        ON e.PurchaseOrderType = a.data_poType AND e.dataAreaId = 'zir'
+        ON LOWER(e.PurchaseOrderType) = LOWER(a.data_poType) AND LOWER(e.dataAreaId) = 'zir'
     WHERE a.data_items_flagDeletion = 0 
-      AND a.data_items_itemGroup = 'SP01'
+      AND UPPER(a.data_items_itemGroup) = 'SP01'
       AND CAST(a.data_timestamp AS DATE) BETWEEN @StarDate AND @MaxDate
     GROUP BY 
         a.data_vendorNo, a.data_vendorName, CAST(a.data_timestamp AS DATE), a.data_poNo, 

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Transform mart 51 outlet"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fdeb4ad9-cf3a-bd96-470f-45eb21c083ad"
+  }
+}

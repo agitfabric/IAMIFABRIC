@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[SP_REPORT_35_MONTHLY_PARAMETERS]  @Year char(4), @month char(2)
+CREATE   PROCEDURE [dbo].[SP_REPORT_35_MONTHLY_PARAMETERS]  @Year char(4), @month char(2)
 
 AS
 BEGIN
@@ -49,11 +49,11 @@ BEGIN
 			0 as ZDStockLevel, 0 as FD, 0 as POQty, 0 as POAmount, 0 as SOQty, 0 as SOAmount, 
 			0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs
 	FROM      SILVER_WAREHOUSE.dbo.InventTrans AS a LEFT OUTER JOIN
-				SILVER_WAREHOUSE.dbo.Dim AS b ON b.inventDimId = a.inventDimId LEFT OUTER JOIN
-				SILVER_WAREHOUSE.dbo.InventItemGroupItem AS c ON c.ItemId = a.ItemId AND c.ItemDataAreaId = a.dataAreaId INNER JOIN
-				SILVER_WAREHOUSE.dbo.ForecastModel as e on e.Warehouse = b.InventLocationId 
+				SILVER_WAREHOUSE.dbo.Dim AS b ON LOWER(b.inventDimId) = LOWER(a.inventDimId) LEFT OUTER JOIN
+				SILVER_WAREHOUSE.dbo.InventItemGroupItem AS c ON LOWER(c.ItemId) = LOWER(a.ItemId) AND LOWER(c.ItemDataAreaId)= LOWER(a.dataAreaId) INNER JOIN
+				SILVER_WAREHOUSE.dbo.ForecastModel as e on LOWER(e.Warehouse) = LOWER(b.InventLocationId) 
 	WHERE   (a.DatePhysical > '1900-01-01 12:00:00.000') AND (LOWER(a.dataAreaId) <> 'kzu') 
-	AND c.ItemGroupId = 'SP01'
+	AND UPPER(c.ItemGroupId) = 'SP01'
 	--and b.InventLocationId = 'ARM01-2000' and a.ItemId = 'I1-09070 085-0'
 	AND cast(a.DatePhysical as date) <= @lastdate
 	Group by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId
@@ -64,7 +64,7 @@ BEGIN
 			0 as Qty, 0 as Amount, 0 as StdCost, ZDStockLevel, ZQtyDemandAvgNormalized as FD, 0 as POQty, 0 as POAmount, 0 as SOQty, 0 as SOAmount,
 			0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs
 	from SILVER_WAREHOUSE.dbo.MRPDemandNormalized
-	where ZDemandYear = @Year and MonthsInNumb = cast(@month as int) and DataAreaIdHeader != 'kzu'
+	where ZDemandYear = @Year and MonthsInNumb = cast(@month as int) and LOWER(DataAreaIdHeader) != 'kzu'
 	--and ZInventLocationId = 'ARM01-2000' and ZItemId = 'I1-09070 085-0'
 
 	-- On Order
@@ -75,11 +75,11 @@ BEGIN
 			0 as SOQty, 0 as SOAmmount,
 			0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs
 	from SILVER_WAREHOUSE.dbo.PurchaseOrderLineV2 a
-		left join SILVER_WAREHOUSE.dbo.ZVendInvoiceTrans b on b.PurchID = a.PurchaseOrderNumber and b.PurchaseLineLineNumber = a.LineNumber
-		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on c.ItemDataAreaId = a.dataAreaId and c.ItemId = a.ItemNumber
-		inner join SILVER_WAREHOUSE.dbo.ForecastModel as d on d.Warehouse = a.ReceivingWarehouseId	
+		left join SILVER_WAREHOUSE.dbo.ZVendInvoiceTrans b on LOWER(b.PurchID) = LOWER(a.PurchaseOrderNumber) and LOWER(b.PurchaseLineLineNumber) = LOWER(a.LineNumber)
+		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemNumber)
+		inner join SILVER_WAREHOUSE.dbo.ForecastModel as d on LOWER(d.Warehouse) = LOWER(a.ReceivingWarehouseId	)
 	where cast(a.CreatedDateTime1 as date) <= @lastdate 
-		and c.ItemGroupId = 'SP01' and lower(a.dataAreaId) != 'kzu'
+		and UPPER(c.ItemGroupId) = 'SP01' and lower(a.dataAreaId) != 'kzu'
 		and cast(b.InvoiceDate as date) > @lastdate
 		--and a.ReceivingWarehouseId = 'ARM01-2000' and a.ItemNumber = 'I1-09070 085-0'
 	Group by a.dataAreaId, a.ReceivingSiteId, a.ReceivingWarehouseId, ItemNumber
@@ -90,14 +90,14 @@ BEGIN
 			0 as Qty, 0 as Amount, 0 as StdCost, 0 as ZDStocklevel, 0 as FD, 0 as POQty, 0 as POAmount,
 			sum(a.SalesQty) as SOQty,sum(a.LineAmount) as SOAmount, 0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs
 	from SILVER_WAREHOUSE.dbo.ZSalesOrderLine a
-		left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans b on b.SalesId = a.SalesOrderNumber and b.LineNum = a.LineNum
-		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on c.ItemDataAreaId = a.dataAreaId and c.ItemId = a.ItemNumber
-		left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader d on d.SalesId = a.SalesOrderNumber
-		left join SILVER_WAREHOUSE.dbo.Dim e on e.inventDimId = a.InventDimId
-		inner join SILVER_WAREHOUSE.dbo.ForecastModel as f on f.Warehouse = d.InventLocationId
+		left join SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans b on LOWER(b.SalesId) = LOWER(a.SalesOrderNumber) and LOWER(b.LineNum) = LOWER(a.LineNum)
+		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemNumber)
+		left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader d on LOWER(d.SalesId) = LOWER(a.SalesOrderNumber)
+		left join SILVER_WAREHOUSE.dbo.Dim e on LOWER(e.inventDimId) = LOWER(a.InventDimId)
+		inner join SILVER_WAREHOUSE.dbo.ForecastModel as f on LOWER(f.Warehouse) = LOWER(d.InventLocationId)
 	where cast(a.CreatedDateTime1 as date) <= @lastdate 
-		and c.ItemGroupId = 'SP01' and d.SalesOrderPoolId = 'SP'
-		and a.SalesOrderLineStatus != 'Canceled' and a.SalesQty > 0 and lower(a.dataAreaId) != 'kzu'
+		and UPPER(c.ItemGroupId) = 'SP01' and UPPER(d.SalesOrderPoolId) = 'SP'
+		and LOWER(a.SalesOrderLineStatus) != 'canceled' and a.SalesQty > 0 and lower(a.dataAreaId) != 'kzu'
 		and cast(b.InvoiceDate as date) > @lastdate
 		--and d.InventLocationId = 'ARM01-2000' and a.ItemNumber = 'I1-09070 085-0'
 		Group by a.dataAreaId, d.InventLocationId, d.InventSiteId, ItemNumber
@@ -110,16 +110,16 @@ BEGIN
 			Sum(a.Qty) SalesQtyMTD, sum(a.LineAmount) as SalesAmountMTD, 
 			Case when sum(g.qty) = 0 then 0 else SUM(g.CostAmountPosted+CostAmountAdjustment)/ sum(g.qty) end as SalesCogs
 	from SILVER_WAREHOUSE.dbo.ZCustInvoiceTrans a
-		Left join SILVER_WAREHOUSE.dbo.Dim b on b.inventDimId = a.InventDimId
-		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on c.ItemDataAreaId = a.dataAreaId and c.ItemId = a.ItemId
-		left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader d on d.SalesId = a.SalesId 
-		inner join SILVER_WAREHOUSE.dbo.ForecastModel as e on e.Warehouse = d.InventLocationId
-		left join SILVER_WAREHOUSE.dbo.InventTransOrigin as f on f.InventTransId = a.InventTransId
+		Left join SILVER_WAREHOUSE.dbo.Dim b on LOWER(b.inventDimId) = LOWER(a.InventDimId)
+		inner join SILVER_WAREHOUSE.dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemId)
+		left join SILVER_WAREHOUSE.dbo.ZSalesOrderHeader d on LOWER(d.SalesId) = LOWER(a.SalesId)
+		inner join SILVER_WAREHOUSE.dbo.ForecastModel as e on LOWER(e.Warehouse) = LOWER(d.InventLocationId)
+		left join SILVER_WAREHOUSE.dbo.InventTransOrigin as f on LOWER(f.InventTransId) = LOWER(a.InventTransId)
 		left join (select dataAreaId, InventTransOrigin, ItemId, InvoiceId, sum(Qty) qty ,sum(CostAmountPosted) CostAmountPosted, sum(CostAmountAdjustment) CostAmountAdjustment
 			from SILVER_WAREHOUSE.dbo.InventTrans
-			Group by dataAreaId, InventTransOrigin, ItemId, InvoiceId) g on g.InventTransOrigin= f.RecId1 and g.InvoiceId = a.InvoiceId and g.ItemId = a.ItemId
-	Where c.ItemGroupId = 'SP01' -- and LineAmount > 0 
-	and d.SalesOrderPoolId  in ('SP','SV') and a.dataAreaId != 'kzu'
+			Group by dataAreaId, InventTransOrigin, ItemId, InvoiceId) g on LOWER(g.InventTransOrigin)= LOWER(f.RecId1) and LOWER(g.InvoiceId) = LOWER(a.InvoiceId) and LOWER(g.ItemId) = LOWER(a.ItemId)
+	Where UPPER(c.ItemGroupId) = 'SP01' -- and LineAmount > 0 
+	and UPPER(d.SalesOrderPoolId)  in ('SP','SV') and LOWER(a.dataAreaId) != 'kzu'
 	and cast(InvoiceDate as date) between @firstdate and @lastdate
 	Group by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId
 
@@ -141,8 +141,8 @@ BEGIN
 	--  --and b.InventLocationId = 'ARM01-2000' and a.ItemId = 'I1-09070 085-0'
 	--Group by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId
 	)x
-		Inner Join SILVER_WAREHOUSE.dbo.ZInventTables y on y.ItemId = x.ItemId and y.dataAreaId = x.dataAreaId
-		Left Join SILVER_WAREHOUSE.dbo.MRPDemand as z on z.ZInventLocationId = x.Warehouse and z.ZItemId = x.ItemId and z.ZDemandYear = @Year and z.MonthsInNumb = cast(@month as int)
+		Inner Join SILVER_WAREHOUSE.dbo.ZInventTables y on LOWER(y.ItemId) = LOWER(x.ItemId) and LOWER(y.dataAreaId) = LOWER(x.dataAreaId)
+		Left Join SILVER_WAREHOUSE.dbo.MRPDemand as z on LOWER(z.ZInventLocationId) = LOWER(x.Warehouse) and LOWER(z.ZItemId) = LOWER(x.ItemId) and z.ZDemandYear = @Year and z.MonthsInNumb = cast(@month as int)
 	Group by x.RunningDate, x.dataAreaId, x.Outlet, x.Warehouse, x.ItemId, y.NameAlias, z.ZMRPABCCode, y.AgitPartsCreatedDate
 	Order by x.RunningDate, x.dataAreaId, x.Outlet, x.Warehouse, x.ItemId
 
@@ -152,7 +152,7 @@ BEGIN
 		left join (select ItemId, Warehouse, sum(SalesAmountMTD)/6 as SalesAvg6bln, sum(COGS)/count(RunningDate) as CogsAvg6mth
 					from Report_35_Monthly
 					where EstDate between  @firstdate6mth and @lastdate
-					  Group by ItemId, Warehouse) b on b.ItemId = a.ItemId and b.Warehouse = a.Warehouse		
+					  Group by ItemId, Warehouse) b on LOWER(b.ItemId) = LOWER(a.ItemId) and LOWER(b.Warehouse)= LOWER(a.Warehouse)	
 	where RunningDate = @Year+@month
 
 	select Max(RunningDate) runningdate From Report_35_Monthly

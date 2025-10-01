@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup DS Sales Marketing",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Truncate Table DS Sales Marketing",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -77,7 +84,10 @@
                   "datasetSettings": {
                     "type": "LakehouseTable",
                     "typeProperties": {
-                      "table": "@item().TableName"
+                      "table": {
+                        "value": "@item().TableName",
+                        "type": "Expression"
+                      }
                     },
                     "schema": [],
                     "linkedService": {
@@ -121,6 +131,45 @@
         "dependsOn": [
           {
             "activity": "Lookup DS Sales Marketing",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "d68c62b6-7c54-9e8a-4a1e-4288a486c618",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Truncate Table DS Sales Marketing",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "b40d2b1c-f225-9cf6-4245-d6382f1e562b",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table DS Sales Marketing",
+        "dependsOn": [
+          {
+            "activity": "Ingest DS Sales Marketing",
             "dependencyConditions": [
               "Succeeded"
             ]

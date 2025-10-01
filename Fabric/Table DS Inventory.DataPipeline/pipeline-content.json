@@ -37,7 +37,14 @@
           "secureOutput": false
         },
         "name": "Lookup DS Inventory",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "truncate table DS Inventory",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "ForEach",
@@ -52,7 +59,10 @@
               "typeProperties": {
                 "source": {
                   "type": "SqlServerSource",
-                  "sqlReaderQuery": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}\n",
+                  "sqlReaderQuery": {
+                    "value": "SELECT * FROM @{item().SourceSchema}.@{item().TableName}\n",
+                    "type": "Expression"
+                  },
                   "partitionOption": "None",
                   "queryTimeout": "02:00:00",
                   "datasetSettings": {
@@ -121,6 +131,45 @@
         "dependsOn": [
           {
             "activity": "Lookup DS Inventory",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "63302c34-ad57-81ff-487a-ad7d075c2cea",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "truncate table DS Inventory",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "44fdb3a4-780f-b72b-4318-a9564894ba37",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Refresh Table DS Inventory",
+        "dependsOn": [
+          {
+            "activity": "Ingest DS Inventory",
             "dependencyConditions": [
               "Succeeded"
             ]

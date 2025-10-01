@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "sementara_ingest_CR"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7f8f01fc-3054-909b-42b9-acbc7400e9d8"
+  }
+}

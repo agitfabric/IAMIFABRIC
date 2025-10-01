@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule KPI Fakpol"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8f98653c-a8a5-99aa-47b9-693f63cdd810"
+  }
+}

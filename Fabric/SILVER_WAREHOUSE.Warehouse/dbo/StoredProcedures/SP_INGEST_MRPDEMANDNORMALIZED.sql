@@ -1,5 +1,5 @@
 CREATE PROCEDURE SP_INGEST_MRPDEMANDNORMALIZED as
-drop table SILVER_WAREHOUSE.dbo.MRPDemandNormalized
+delete from  SILVER_WAREHOUSE.dbo.MRPDemandNormalized
 
-select * into MRPDemandNormalized from 
-(select * from BRONZE_LAKEHOUSE.dbo.MRPDemandNormalized) a
+insert into MRPDemandNormalized  
+select * from BRONZE_LAKEHOUSE.dbo.MRPDemandNormalized

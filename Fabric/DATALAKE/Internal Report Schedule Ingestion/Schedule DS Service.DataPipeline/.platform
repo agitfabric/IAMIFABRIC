@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule DS Service"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8422ded7-8526-9d81-48c0-e24f891631ca"
+  }
+}

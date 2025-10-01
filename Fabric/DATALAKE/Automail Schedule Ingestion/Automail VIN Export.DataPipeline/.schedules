@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/schedules/1.0.0/schema.json",
+  "schedules": [
+    {
+      "enabled": false,
+      "jobType": "Execute",
+      "configuration": {
+        "type": "Cron",
+        "startDateTime": "2025-09-07T21:46:00",
+        "endDateTime": "2035-12-31T21:46:00",
+        "localTimeZoneId": "SE Asia Standard Time",
+        "interval": 15
+      }
+    },
+    {
+      "enabled": true,
+      "jobType": "Execute",
+      "configuration": {
+        "type": "Cron",
+        "startDateTime": "2025-09-29T14:03:00",
+        "endDateTime": "2040-12-31T14:03:00",
+        "localTimeZoneId": "SE Asia Standard Time",
+        "interval": 60
+      }
+    }
+  ]
+}

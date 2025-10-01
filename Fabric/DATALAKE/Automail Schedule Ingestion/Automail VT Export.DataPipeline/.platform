@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Automail VT Export"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "44d4e9a6-17f3-a035-4321-276e03e376de"
+  }
+}

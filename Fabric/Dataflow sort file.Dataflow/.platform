@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "Dataflow sort file"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c018f276-c4a5-b947-4a4e-0f519a02cb88"
+  }
+}

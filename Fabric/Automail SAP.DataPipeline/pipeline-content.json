@@ -1,0 +1,45 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "SAP",
+        "type": "Copy",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "BinarySource",
+            "storeSettings": {
+              "type": "FileServerReadSettings",
+              "recursive": true
+            },
+            "formatSettings": {
+              "type": "BinaryReadSettings"
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "type": "Binary",
+              "typeProperties": {
+                "location": {
+                  "type": "FileServerLocation"
+                }
+              },
+              "externalReferences": {
+                "connection": "1c4afe81-d3b7-4e70-8449-e2af0a2fa29b"
+              }
+            }
+          },
+          "enableStaging": false
+        }
+      }
+    ]
+  }
+}

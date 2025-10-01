@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest All Silver IAMI_PROD"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "786c1caa-76d9-b3e7-41ad-3e1936c7d4c7"
+  }
+}

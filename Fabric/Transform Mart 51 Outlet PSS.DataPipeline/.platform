@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Transform Mart 51 Outlet PSS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c75bd3fc-8528-8cec-405e-c7c1a6681975"
+  }
+}

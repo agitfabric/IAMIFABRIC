@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Automail SAP"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3b64be7b-f42b-b0cf-4120-f1f23558b064"
+  }
+}

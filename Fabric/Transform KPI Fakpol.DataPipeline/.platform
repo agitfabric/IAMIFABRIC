@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Transform KPI Fakpol"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c99c1724-a946-94f2-487c-17c5125fc828"
+  }
+}

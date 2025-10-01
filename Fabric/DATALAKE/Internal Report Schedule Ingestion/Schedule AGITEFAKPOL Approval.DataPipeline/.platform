@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Schedule AGITEFAKPOL Approval"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "387f5079-a1c8-a93b-4bf0-4eeb073abd45"
+  }
+}
