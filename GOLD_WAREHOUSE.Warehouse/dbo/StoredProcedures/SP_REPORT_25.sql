@@ -1,9 +1,12 @@
 CREATE       PROCEDURE [dbo].[SP_REPORT_25] AS
 
 DECLARE @GetMaxRunningDate DATE, @GetCurrentDate DATE
-SELECT @GetMaxRunningDate =ISNULL(DATEADD(DAY,1,MAX(DatePhysical)), '2019-09-01'), @GetCurrentDate = CAST(DATEADD(hour,7,GETDATE() )AS DATE)
-FROM GOLD_WAREHOUSE.dbo.Report_25 where kode_dealer != 'AI';
 
+select @GetMaxRunningDate = dateadd(month, datediff(month, 0, Isnull(max(cast(DatePhysical as date)),'2022-01-01')), 0),
+--SELECT @GetMaxRunningDate =ISNULL(DATEADD(DAY,1,MAX(DatePhysical)), '2019-09-01'), 
+@GetCurrentDate = CAST(DATEADD(hour,7,GETDATE() )AS DATE)
+FROM GOLD_WAREHOUSE.dbo.Report_25 where kode_dealer != 'AI';
+DELETE FROM GOLD_WAREHOUSE.dbo.Report_25 where DatePhysical >= @GetMaxRunningDate  AND kode_dealer != 'AI';
 WITH temp_union AS (
     SELECT 
         a.DatePhysical AS DatePhysical,
@@ -128,4 +131,4 @@ SELECT
     kode_outlet,
     kode_dealer
 FROM final_with_beginstock
-where DatePhysical between @GetMaxRunningDate and @GetCurrentDate
+where  DatePhysical >= @GetMaxRunningDate

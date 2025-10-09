@@ -2031,7 +2031,7 @@
         "annotations": [
           {
             "name": "IsTableInBiModel",
-            "value": "False"
+            "value": "True"
           }
         ]
       },
@@ -37265,6 +37265,74 @@
             "source": {
               "type": "entity",
               "entityName": "Report_53_BM",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "SILVER_TABLE_COUNT",
+        "sourceLineageTag": "[dbo].[SILVER_TABLE_COUNT]",
+        "columns": [
+          {
+            "name": "TableName",
+            "dataType": "string",
+            "sourceColumn": "TableName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TableName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "countRow",
+            "dataType": "int64",
+            "sourceColumn": "countRow",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "countRow",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lastDate",
+            "dataType": "dateTime",
+            "sourceColumn": "lastDate",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "lastDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "SILVER_TABLE_COUNT",
               "expressionSource": "DatabaseQuery",
               "schemaName": "dbo"
             }
