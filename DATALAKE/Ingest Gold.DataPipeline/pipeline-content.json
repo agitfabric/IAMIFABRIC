@@ -23,13 +23,13 @@
           "datasetSettings": {
             "annotations": [],
             "linkedService": {
-              "name": "SILVER_WAREHOUSE",
+              "name": "GOLD_WAREHOUSE",
               "properties": {
                 "annotations": [],
                 "type": "DataWarehouse",
                 "typeProperties": {
                   "endpoint": "o3zzo4pnzbqurgos5j4c5z4n3i-w6bcdpbs33dubgf4doiohv4tue.datawarehouse.fabric.microsoft.com",
-                  "artifactId": "c9d4dac3-f0c2-4ab7-ada3-6816157abddb",
+                  "artifactId": "27ea7bf8-704f-439a-8ea1-37cca465c41d",
                   "workspaceId": "bc2182b7-de32-40c7-98bc-1b90e3d793a1"
                 }
               }
@@ -56,8 +56,7 @@
             "value": "@activity('Lookup Table').output.value",
             "type": "Expression"
           },
-          "isSequential": false,
-          "batchCount": 10,
+          "isSequential": true,
           "activities": [
             {
               "name": "Copy data1",

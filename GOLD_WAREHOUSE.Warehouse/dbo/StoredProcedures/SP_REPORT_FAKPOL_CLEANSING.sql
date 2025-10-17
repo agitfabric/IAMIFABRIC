@@ -79,7 +79,7 @@ BEGIN
 			PrintedDate = b.PrintedDate, 
 			TglFakpol = b.TglFakpol
 		from Report_Fakpol a
-			INNER JOIN AGITEFakpol b 
+			INNER JOIN SILVER_WAREHOUSE.dbo.AGITEFakpol b 
     ON LOWER(b.ChassisNumber) = LOWER(a.ChassisNumber) 
    AND LOWER(b.StatusFakpol) = LOWER('Printed')
 
@@ -89,7 +89,7 @@ BEGIN
 		update Report_Fakpol
 		set NoFakpol = isnull(b.NoFakpol,'')
 		from Report_Fakpol a
-			LEFT JOIN AGITEFakpol b 
+			LEFT JOIN SILVER_WAREHOUSE.dbo.AGITEFakpol b 
     ON LOWER(b.ChassisNumber) = LOWER(a.ChassisNumber)
 
 		where a.NoFakpol = ''
@@ -109,12 +109,12 @@ BEGIN
     FROM Report_Fakpol x
         inner join AdditionalFakpol a 
             on LOWER(x.ChassisNumber) = LOWER(a.ChassisNumber)
-        inner join ZInventSites b 
+        inner join SILVER_WAREHOUSE.dbo.ZInventSites b 
             on LOWER(b.SiteId) = LOWER(a.KodeOutlet)
-        left join DeviceTable c 
+        left join SILVER_WAREHOUSE.dbo.DeviceTable c 
             on LOWER(c.DeviceId) = LOWER(a.ChassisNumber) 
             and LOWER(c.dataAreaId) = LOWER(LEFT(a.KodeOutlet,3))
-        left join ZInventTables d 
+        left join SILVER_WAREHOUSE.dbo.ZInventTables d 
             on LOWER(d.ItemId) = LOWER(c.ItemId) 
             and LOWER(d.dataAreaId) = LOWER(c.dataAreaId)
     WHERE LOWER(x.KodeOutlet) = LOWER('') 
@@ -123,17 +123,17 @@ BEGIN
 Update a
     set CustomerName = c.Name
 from Report_Fakpol a
-    left join ZCustomers b 
+    left join SILVER_WAREHOUSE.dbo.ZCustomers b 
         on LOWER(b.AccountNum) = LOWER(a.CustomerID) 
         and LOWER(b.dataAreaId) = LOWER(a.KodeDealer)
-    left join DirPartyTable c 
+    left join SILVER_WAREHOUSE.dbo.DirPartyTable c 
         on LOWER(c.RecordId) = LOWER(b.Party)
 where a.CustomerName IS NULL;
 
 Update a
     Set a.InvoiceDate = b.InvoiceDate
 from Report_Fakpol a
-    inner join AGITEFakpol b 
+    inner join SILVER_WAREHOUSE.dbo.AGITEFakpol b 
         on LOWER(b.ChassisNumber) = LOWER(a.ChassisNumber)
 where a.InvoiceDate IS NULL;
 
@@ -144,7 +144,7 @@ Update a
     set a.Area = b.AreaCode+' - '+b.ZIAMIArea, 
         a.Group_Dealer = b.Group_Dealer
 from Report_Fakpol a
-    Inner join ZInventSites b 
+    Inner join SILVER_WAREHOUSE.dbo.ZInventSites b 
         on LOWER(b.SiteId) = LOWER(a.KodeOutlet)
 where LOWER(a.Area) LIKE LOWER('%None%') 
    OR a.Group_Dealer IS NULL;
@@ -167,7 +167,7 @@ where LOWER(a.InvoiceNo) = LOWER('')
 update a
     set a.InvoiceNo = c.InvoiceNo
 from Report_Fakpol a
-    left join ZEFakpol c 
+    left join SILVER_WAREHOUSE.dbo.ZEFakpol c 
         on LOWER(c.VIN) = LOWER(a.ChassisNumber)
 where (LOWER(a.InvoiceNo) = LOWER('') OR a.InvoiceNo IS NULL) 
   AND c.InvoiceNo IS NOT NULL;
@@ -175,7 +175,7 @@ where (LOWER(a.InvoiceNo) = LOWER('') OR a.InvoiceNo IS NULL)
 Update a
     set a.InvoiceNo = c.InvoiceNo
 from Report_Fakpol a
-    left join AGITEFakpol c 
+    left join SILVER_WAREHOUSE.dbo.AGITEFakpol c 
         on LOWER(c.ChassisNumber) = LOWER(a.ChassisNumber)
 where (LOWER(a.InvoiceNo) = LOWER('') OR a.InvoiceNo IS NULL) 
   AND c.InvoiceNo IS NOT NULL;

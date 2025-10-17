@@ -46,7 +46,7 @@
         "typeProperties": {
           "source": {
             "type": "SqlServerSource",
-            "sqlReaderQuery": "Select \tcount(1)\t\t\t\t\t\r\n\t\t\t\tFrom PurchaseOrderHeaderV2 a\r\n\t\t\t\t\tleft join PurchaseOrderLineV2 b on b.PurchaseOrderNumber = a.PurchId and b.DataAreaId = a.DATAAREAID \r\n\t\t\t\t\tleft join ( select distinct x.OrigPurchId, x.DATAAREAID, x.PURCHASELINELINENUMBER, x.Qty, y.InvoiceDate , x.InvoiceId --before:left joinfrom ZVendInvoiceTrans x \r\n\t\t\t\t\t\t\t\tfrom ZVendInvoiceTrans x \r\n\t\t\t\t\t\t\t\tinner join ZVendInvoiceJours y on x.INVOICEID = y.INVOICEID)\r\n\t\t\t\t\t\t\t\tc on c.OrigPurchID = b.PurchaseOrderNumber and c.DATAAREAID = b.DATAAREAID and c.PURCHASELINELINENUMBER = b.LINENUMBER\r\n\t\t\t\t\t--left Join PurchaseType e on e.PurchaseOrderType = a.ZPURCHASETYPE and e.DATAAREAID = a.DATAAREAID\r\n\t\t\t\t\t--left join (select o.ziamiarea , o.SiteId, o.Name \r\n\t\t\t\t\t\t\t--from ZInventSites o inner join AddressState p on o.ZProvinsi = p.State)\r\n\t\t\t\t\t\t\t\t--f on f.SiteId = a.InventSiteId \r\n\t\t\t\t\t--left join ledger l on l.name = a.dataAreaId \r\n\t\t\t\t\t--left join ZVendInvoiceInfoTable i on i.Num = c.InvoiceId\r\n\t\t\t\t\t--where b.PurchaseOrderLineStatus = 'Invoiced'\r\n\t\t\t\t--and a.PurchaseOrderPoolId in ('SP')\r\n",
+            "sqlReaderQuery": "Select \tcount(1)\t\t\t\t\t\r\n\t\t\t\tFrom Report_35_Monthly\r\n",
             "queryTimeout": "02:00:00",
             "partitionOption": "None",
             "datasetSettings": {
@@ -197,7 +197,7 @@
         "typeProperties": {
           "source": {
             "type": "SqlServerSource",
-            "sqlReaderQuery": "select count(1) from Report_31 where [SO/PKB_Date] BETWEEN '2025-09-01' AND '2025-09-13'",
+            "sqlReaderQuery": "\tDeclare @firstdate date, @lastdate date, @firstdate6mth date, @mrpcount int;\r\n\r\n\tDeclare @year char(4), @month char(2)\r\n\tselect @year = Cast(DATEPART(yyyy, GETDATE()) as char(4))\r\n\tSELECT @month = RIGHT('0' + CAST(DATEPART(mm, GETDATE())-1 AS VARCHAR(2)), 2);\r\n\r\n\t--Select Left(Convert(char,getdate(),112),4), @month = SUBSTRING(Convert(char,getdate(),112),5,2)\r\n\r\n\tselect  @firstdate = Cast(DATEADD(MONTH,0, @Year+@month+'01') as date),\r\n\t\t\t@lastdate = Cast(DATEADD(MONTH,1, @Year+@month+'01')-1 as date), \r\n\t\t\t@firstdate6mth = Cast(DATEADD(MONTH,-5, @Year+@month+'01') as date);\r\n \t\t\r\n\tselect @mrpcount = count(*) from dbo.MRPDemand where ZDemandYear = @Year and MonthsInNumb = cast(@month as int);\r\n\r\n\t--Delete Report_35_Monthly where RunningDate = @Year+@month\r\n\r\n\t--Insert Into Report_35_Monthly\r\n\r\n\t\r\nwith temp as (\t\r\n\tSelect  Cast(DATEADD(MONTH,0, @Year+@month+'01') as date) as EstDate,\r\n\t\t\tRunningDate, x.dataAreaId, Outlet, Warehouse, x.ItemId, y.NameAlias as Description, \r\n\t\t\tCase when z.ZMRPABCCode IS NOT NULL then z.ZMRPABCCode \r\n\t\t\t\t when z.ZMRPABCCode IS NULL and @mrpcount > 0 and DATEDIFF(month, @lastdate,cast(y.AgitPartsCreatedDate as date)) < 24 then 'X' \r\n\t\t\t\t when z.ZMRPABCCode IS NULL and @mrpcount > 0 and DATEDIFF(month, @lastdate,cast(y.AgitPartsCreatedDate as date)) >= 24 then 'N'  end as ABCCode,\r\n\t\t\tCASE WHEN lower(z.ZMRPABCCode) IN ('a', 'b') THEN 'Fast Moving' \r\n\t\t\t WHEN lower(z.ZMRPABCCode) = 'c' THEN 'Medium Moving' \r\n\t\t\t WHEN lower(z.ZMRPABCCode) = 'd' THEN 'Slow Moving' \r\n\t\t\t WHEN lower(z.ZMRPABCCode) IN ('e', 'x', 'n') THEN 'No Moving' \r\n\t\t\t WHEN lower(z.ZMRPABCCode) IS NULL and @mrpcount > 0 THEN 'No Moving'  END AS ABCClassification,\r\n\t\t\tSum(Qty) StockQty, \r\n\t\t\tCase when sum(Qty) = 0 then 0 else Sum(Amount) end as StockAmount, \r\n\t\t\tCase when sum(SalesQtyMTD) > 0 then sum(SalesCogs) else Sum(StdCost) end as StdCost, \r\n\t\t\tSum(ZDStockLevel) StockLevel, Sum(FD) FD, \r\n\t\t\tSum(POQty) POQty,Sum(POAmount) POAmount, Sum(SOQty) SOQty,Sum(SOAmount) SOAmount, \r\n\t\t\tsum(SalesQtyMTD) as SalesQtyMTD, Sum(SalesAmountMTD) SalesAmountMTD,\r\n\t\t\tCase when sum(SalesQtyMTD) > 0 then sum(SalesQtyMTD)*sum(SalesCogs) else sum(SalesQtyMTD)*Sum(StdCost) end as COGS, \r\n\t\t\t0 as AvgSales6mth, 0 as AvgCogs6mth,\r\n\t\t\tWarehouse+x.ItemId+RunningDate as sortby\r\n\tFrom\r\n\t(\r\n\tSELECT\t@Year+@month as RunningDate, a.dataAreaId, b.InventSiteId Outlet, b.InventLocationId AS Warehouse, \r\n\t\t\ta.ItemId, sum(a.Qty) as Qty, sum(a.CostAmountPosted + a.CostAmountAdjustment) AS Amount, \r\n\t\t\tCase when sum(a.Qty) = 0 then 0 else sum(a.CostAmountPosted + a.CostAmountAdjustment)/sum(a.Qty) end as StdCost,\r\n\t\t\t0 as ZDStockLevel, 0 as FD, 0 as POQty, 0 as POAmount, 0 as SOQty, 0 as SOAmount, \r\n\t\t\t0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs\r\n\tFROM      dbo.InventTrans AS a LEFT OUTER JOIN\r\n\t\t\t\tdbo.Dim AS b ON LOWER(b.inventDimId) = LOWER(a.inventDimId) LEFT OUTER JOIN\r\n\t\t\t\tdbo.InventItemGroupItem AS c ON LOWER(c.ItemId) = LOWER(a.ItemId) AND LOWER(c.ItemDataAreaId)= LOWER(a.dataAreaId) INNER JOIN\r\n\t\t\t\tdbo.ForecastModel as e on LOWER(e.Warehouse) = LOWER(b.InventLocationId) \r\n\tWHERE   (a.DatePhysical > '1900-01-01 12:00:00.000') AND (LOWER(a.dataAreaId) <> 'kzu') \r\n\tAND UPPER(c.ItemGroupId) = 'SP01'\r\n\t--and b.InventLocationId = 'ARM01-2000' and a.ItemId = 'I1-09070 085-0'\r\n\tAND cast(a.DatePhysical as date) <= @lastdate\r\n\tGroup by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId\r\n\r\n\t-- Stock Level & FD\r\n\tUnion All\r\n\tselect  @Year+@month as RunningDate, DataAreaIdHeader, ZInventSiteId Outlet, ZInventLocationId Warehouse, ZItemId ItemId, \r\n\t\t\t0 as Qty, 0 as Amount, 0 as StdCost, ZDStockLevel, ZQtyDemandAvgNormalized as FD, 0 as POQty, 0 as POAmount, 0 as SOQty, 0 as SOAmount,\r\n\t\t\t0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs\r\n\tfrom dbo.MRPDemandNormalized\r\n\twhere ZDemandYear = @Year and MonthsInNumb = cast(@month as int) and LOWER(DataAreaIdHeader) != 'kzu'\r\n\t--and ZInventLocationId = 'ARM01-2000' and ZItemId = 'I1-09070 085-0'\r\n\r\n\t-- On Order\r\n\tUnion All\r\n\tselect  @Year+@month as RunningDate, a.dataAreaId, a.ReceivingSiteId Outlet, a.ReceivingWarehouseId Warehouse, ItemNumber ItemId, \r\n\t\t\t0 as Qty, 0 as Amount, 0 as Stdcost, 0 as ZDStockLevel, 0 as FD,\r\n\t\t\tsum(a.OrderedPurchaseQuantity) as POQty, sum(a.LineAmount) as POAmount,\r\n\t\t\t0 as SOQty, 0 as SOAmmount,\r\n\t\t\t0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs\r\n\tfrom dbo.PurchaseOrderLineV2 a\r\n\t\tleft join dbo.ZVendInvoiceTrans b on LOWER(b.PurchID) = LOWER(a.PurchaseOrderNumber) and LOWER(b.PurchaseLineLineNumber) = LOWER(a.LineNumber)\r\n\t\tinner join dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemNumber)\r\n\t\tinner join dbo.ForecastModel as d on LOWER(d.Warehouse) = LOWER(a.ReceivingWarehouseId\t)\r\n\twhere cast(a.CreatedDateTime1 as date) <= @lastdate \r\n\t\tand UPPER(c.ItemGroupId) = 'SP01' and lower(a.dataAreaId) != 'kzu'\r\n\t\tand cast(b.InvoiceDate as date) > @lastdate\r\n\t\t--and a.ReceivingWarehouseId = 'ARM01-2000' and a.ItemNumber = 'I1-09070 085-0'\r\n\tGroup by a.dataAreaId, a.ReceivingSiteId, a.ReceivingWarehouseId, ItemNumber\r\n\r\n\t--Back Order (SO Open)\r\n\tUnion All\r\n\tselect  @Year+@month as RunningDate, a.dataAreaId, d.InventSiteId Outlet, d.InventLocationId Warehouse, ItemNumber ItemId, \r\n\t\t\t0 as Qty, 0 as Amount, 0 as StdCost, 0 as ZDStocklevel, 0 as FD, 0 as POQty, 0 as POAmount,\r\n\t\t\tsum(a.SalesQty) as SOQty,sum(a.LineAmount) as SOAmount, 0 as SalesQtyMTD, 0 as SalesAmountMTD, 0 as SalesCogs\r\n\tfrom dbo.ZSalesOrderLine a\r\n\t\tleft join dbo.ZCustInvoiceTrans b on LOWER(b.SalesId) = LOWER(a.SalesOrderNumber) and LOWER(b.LineNum) = LOWER(a.LineNum)\r\n\t\tinner join dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemNumber)\r\n\t\tleft join dbo.ZSalesOrderHeader d on LOWER(d.SalesId) = LOWER(a.SalesOrderNumber)\r\n\t\tleft join dbo.Dim e on LOWER(e.inventDimId) = LOWER(a.InventDimId)\r\n\t\tinner join dbo.ForecastModel as f on LOWER(f.Warehouse) = LOWER(d.InventLocationId)\r\n\twhere cast(a.CreatedDateTime1 as date) <= @lastdate \r\n\t\tand UPPER(c.ItemGroupId) = 'SP01' and UPPER(d.SalesOrderPoolId) = 'SP'\r\n\t\tand LOWER(a.SalesOrderLineStatus) != 'canceled' and a.SalesQty > 0 and lower(a.dataAreaId) != 'kzu'\r\n\t\tand cast(b.InvoiceDate as date) > @lastdate\r\n\t\t--and d.InventLocationId = 'ARM01-2000' and a.ItemNumber = 'I1-09070 085-0'\r\n\t\tGroup by a.dataAreaId, d.InventLocationId, d.InventSiteId, ItemNumber\r\n\r\n\tUnion All\r\n\tSelect  @Year+@month as RunningDate, a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId, \r\n\t\t\t0 as Qty, 0 as Amount, 0 as StdCost, \r\n\t\t\t0 as ZDStocklevel, 0 as FD, 0 as POQty, 0 as POAmount, \r\n\t\t\t0 as SOQty, 0 as SOAmount, \r\n\t\t\tSum(a.Qty) SalesQtyMTD, sum(a.LineAmount) as SalesAmountMTD, \r\n\t\t\tCase when sum(g.qty) = 0 then 0 else SUM(g.CostAmountPosted+CostAmountAdjustment)/ sum(g.qty) end as SalesCogs\r\n\tfrom dbo.ZCustInvoiceTrans a\r\n\t\tLeft join dbo.Dim b on LOWER(b.inventDimId) = LOWER(a.InventDimId)\r\n\t\tinner join dbo.InventItemGroupItem c on LOWER(c.ItemDataAreaId) = LOWER(a.dataAreaId) and LOWER(c.ItemId) = LOWER(a.ItemId)\r\n\t\tleft join dbo.ZSalesOrderHeader d on LOWER(d.SalesId) = LOWER(a.SalesId)\r\n\t\tinner join dbo.ForecastModel as e on LOWER(e.Warehouse) = LOWER(d.InventLocationId)\r\n\t\tleft join dbo.InventTransOrigin as f on LOWER(f.InventTransId) = LOWER(a.InventTransId)\r\n\t\tleft join (select dataAreaId, InventTransOrigin, ItemId, InvoiceId, sum(Qty) qty ,sum(CostAmountPosted) CostAmountPosted, sum(CostAmountAdjustment) CostAmountAdjustment\r\n\t\t\tfrom dbo.InventTrans\r\n\t\t\tGroup by dataAreaId, InventTransOrigin, ItemId, InvoiceId) g on LOWER(g.InventTransOrigin)= LOWER(f.RecId1) and LOWER(g.InvoiceId) = LOWER(a.InvoiceId) and LOWER(g.ItemId) = LOWER(a.ItemId)\r\n\tWhere UPPER(c.ItemGroupId) = 'SP01' -- and LineAmount > 0 \r\n\tand UPPER(d.SalesOrderPoolId)  in ('SP','SV') and LOWER(a.dataAreaId) != 'kzu'\r\n\tand cast(InvoiceDate as date) between @firstdate and @lastdate\r\n\tGroup by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId\r\n\r\n\r\n\r\n\t--Select  @Year+@month as RunningDate, a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId, \r\n\t--\t\t0 as Qty, 0 as Amount, 0 as StdCost, \r\n\t--\t\t0 as ZDStocklevel, 0 as FD, 0 as POQty, 0 as POAmount, \r\n\t--\t\t0 as SOQty, 0 as SOAmount, \r\n\t--\t\tSum(a.Qty) SalesQtyMTD, sum(a.LineAmountMST+ a.TaxAmountMST) as SalesMTD, \r\n\t--\t\tCase when sum(g.qty) = 0 then 0 else SUM(g.CostAmountPhysical)/ sum(g.qty) end as SalesCogs\r\n\t--from ZCustInvoiceTrans a\r\n\t--\tLeft join Dim b on b.inventDimId = a.InventDimId\r\n\t--\tinner join InventItemGroupItem c on c.ItemDataAreaId = a.dataAreaId and c.ItemId = a.ItemId\r\n\t--\tleft join ZSalesOrderHeader d on d.SalesId = a.SalesId\r\n\t--\tinner join ForecastModel as e on e.Warehouse = d.InventLocationId\r\n\t--\tleft join InventTransOrigin as f on f.InventTransId = a.InventTransId\r\n\t--\tleft join InventTrans as g on g.InventTransOrigin = f.RecId1\r\n\t--Where c.ItemGroupId = 'SP01' and LineAmount > 0 and d.SalesOrderPoolId = 'SP' and a.dataAreaId != 'kzu'\r\n\t--  and cast(InvoiceDate as date) between @firstdate and @lastdate \r\n\t--  --and b.InventLocationId = 'ARM01-2000' and a.ItemId = 'I1-09070 085-0'\r\n\t--Group by a.dataAreaId, b.InventSiteId, b.InventLocationId, a.ItemId\r\n\t)x\r\n\t\tInner Join dbo.ZInventTables y on LOWER(y.ItemId) = LOWER(x.ItemId) and LOWER(y.dataAreaId) = LOWER(x.dataAreaId)\r\n\t\tLeft Join dbo.MRPDemand as z on LOWER(z.ZInventLocationId) = LOWER(x.Warehouse) and LOWER(z.ZItemId) = LOWER(x.ItemId) and z.ZDemandYear = @Year and z.MonthsInNumb = cast(@month as int)\r\n\tGroup by x.RunningDate, x.dataAreaId, x.Outlet, x.Warehouse, x.ItemId, y.NameAlias, z.ZMRPABCCode, y.AgitPartsCreatedDate\r\n\t--Order by x.RunningDate, x.dataAreaId, x.Outlet, x.Warehouse, x.ItemId\r\n) select count(1) from temp",
             "queryTimeout": "02:00:00",
             "partitionOption": "None",
             "datasetSettings": {
@@ -1562,7 +1562,7 @@
               "schema": [],
               "typeProperties": {
                 "schema": "dbo",
-                "table": "Report_31",
+                "table": "Report_35_Monthly",
                 "database": "IAMI_PROD"
               },
               "externalReferences": {
@@ -1594,7 +1594,7 @@
               "schema": [],
               "typeProperties": {
                 "schema": "dbo",
-                "table": "Report_31"
+                "table": "Report_35_Monthly"
               }
             }
           },
@@ -1604,211 +1604,237 @@
             "mappings": [
               {
                 "source": {
-                  "name": "customer_id",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
+                  "name": "EstDate",
+                  "type": "Date",
+                  "physicalType": "date"
                 },
                 "sink": {
-                  "name": "customer_id",
+                  "name": "EstDate",
+                  "physicalType": "date"
+                }
+              },
+              {
+                "source": {
+                  "name": "RunningDate",
+                  "type": "String",
+                  "physicalType": "char",
+                  "length": "6"
+                },
+                "sink": {
+                  "name": "RunningDate",
                   "physicalType": "varchar",
                   "length": "8000"
                 }
               },
               {
                 "source": {
-                  "name": "InvoiceId",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "InvoiceId",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "nama_customer",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "nama_customer",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "SO/PKB_No",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "SO/PKB_No",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "SO/PKB_Date",
-                  "type": "DateTime",
-                  "physicalType": "datetime"
-                },
-                "sink": {
-                  "name": "SO/PKB_Date",
-                  "physicalType": "datetime2",
-                  "precision": 6
-                }
-              },
-              {
-                "source": {
-                  "name": "PO_No",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "PO_No",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "PO_Date",
-                  "type": "DateTime",
-                  "physicalType": "datetime"
-                },
-                "sink": {
-                  "name": "PO_Date",
-                  "physicalType": "datetime2",
-                  "precision": 6
-                }
-              },
-              {
-                "source": {
-                  "name": "Series",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "Series",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "ItemGroupId",
+                  "name": "DataAreaId",
                   "type": "String",
                   "physicalType": "nvarchar",
                   "length": "MAX"
                 },
                 "sink": {
-                  "name": "ItemGroupId",
+                  "name": "DataAreaId",
                   "physicalType": "varchar",
                   "length": "8000"
                 }
               },
               {
                 "source": {
-                  "name": "part_number",
+                  "name": "Outlet",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "Outlet",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Warehouse",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "Warehouse",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "ItemId",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "MAX"
+                },
+                "sink": {
+                  "name": "ItemId",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                }
+              },
+              {
+                "source": {
+                  "name": "Description",
                   "type": "String",
                   "physicalType": "nvarchar",
                   "length": "255"
                 },
                 "sink": {
-                  "name": "part_number",
+                  "name": "Description",
                   "physicalType": "varchar",
                   "length": "8000"
                 }
               },
               {
                 "source": {
-                  "name": "part_name",
+                  "name": "ABCCode",
                   "type": "String",
                   "physicalType": "nvarchar",
-                  "length": "255"
+                  "length": "MAX"
                 },
                 "sink": {
-                  "name": "part_name",
+                  "name": "ABCCode",
                   "physicalType": "varchar",
                   "length": "8000"
                 }
               },
               {
                 "source": {
-                  "name": "Qty_order",
-                  "type": "Double",
-                  "physicalType": "float"
-                },
-                "sink": {
-                  "name": "Qty_order",
-                  "physicalType": "float"
-                }
-              },
-              {
-                "source": {
-                  "name": "Qty_Supply",
-                  "type": "Double",
-                  "physicalType": "float"
-                },
-                "sink": {
-                  "name": "Qty_Supply",
-                  "physicalType": "float"
-                }
-              },
-              {
-                "source": {
-                  "name": "invoice_date",
-                  "type": "DateTime",
-                  "physicalType": "datetime"
-                },
-                "sink": {
-                  "name": "invoice_date",
-                  "physicalType": "datetime2",
-                  "precision": 6
-                }
-              },
-              {
-                "source": {
-                  "name": "nTOP",
+                  "name": "ABCClassification",
                   "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "100"
+                  "physicalType": "varchar",
+                  "length": "13"
                 },
                 "sink": {
-                  "name": "nTOP",
+                  "name": "ABCClassification",
                   "physicalType": "varchar",
                   "length": "8000"
                 }
               },
               {
                 "source": {
-                  "name": "persen_diskon",
+                  "name": "StockQty",
                   "type": "Double",
                   "physicalType": "float"
                 },
                 "sink": {
-                  "name": "persen_diskon",
+                  "name": "StockQty",
                   "physicalType": "float"
                 }
               },
               {
                 "source": {
-                  "name": "Amount",
+                  "name": "StockAmount",
                   "type": "Double",
                   "physicalType": "float"
                 },
                 "sink": {
-                  "name": "Amount",
+                  "name": "StockAmount",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "StdCost",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "StdCost",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "StockLevel",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "StockLevel",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "FD",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "FD",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "POQty",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "POQty",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "POAmount",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "POAmount",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "SOQty",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "SOQty",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "SOAmount",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "SOAmount",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "SalesQtyMTD",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "SalesQtyMTD",
+                  "physicalType": "float"
+                }
+              },
+              {
+                "source": {
+                  "name": "SalesAmountMTD",
+                  "type": "Double",
+                  "physicalType": "float"
+                },
+                "sink": {
+                  "name": "SalesAmountMTD",
                   "physicalType": "float"
                 }
               },
@@ -1825,153 +1851,35 @@
               },
               {
                 "source": {
-                  "name": "GP",
+                  "name": "AvgSales6mth",
                   "type": "Double",
                   "physicalType": "float"
                 },
                 "sink": {
-                  "name": "GP",
+                  "name": "AvgSales6mth",
                   "physicalType": "float"
                 }
               },
               {
                 "source": {
-                  "name": "Tipe",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "8"
+                  "name": "AvgCogs6mth",
+                  "type": "Double",
+                  "physicalType": "float"
                 },
                 "sink": {
-                  "name": "Tipe",
-                  "physicalType": "varchar",
-                  "length": "8000"
+                  "name": "AvgCogs6mth",
+                  "physicalType": "float"
                 }
               },
               {
                 "source": {
-                  "name": "Category",
+                  "name": "Sortby",
                   "type": "String",
                   "physicalType": "nvarchar",
-                  "length": "255"
+                  "length": "MAX"
                 },
                 "sink": {
-                  "name": "Category",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "Area",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "Area",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "Dealer",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "Dealer",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "nama_dealer",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "100"
-                },
-                "sink": {
-                  "name": "nama_dealer",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "Outlet",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "Outlet",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "nama_outlet",
-                  "type": "String",
-                  "physicalType": "nvarchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "nama_outlet",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "Last_update",
-                  "type": "DateTime",
-                  "physicalType": "datetime"
-                },
-                "sink": {
-                  "name": "Last_update",
-                  "physicalType": "datetime2",
-                  "precision": 6
-                }
-              },
-              {
-                "source": {
-                  "name": "MaskingName",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "MaskingName",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "CustPartType",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "CustPartType",
-                  "physicalType": "varchar",
-                  "length": "8000"
-                }
-              },
-              {
-                "source": {
-                  "name": "ZIsPartShop",
-                  "type": "String",
-                  "physicalType": "varchar",
-                  "length": "255"
-                },
-                "sink": {
-                  "name": "ZIsPartShop",
+                  "name": "Sortby",
                   "physicalType": "varchar",
                   "length": "8000"
                 }

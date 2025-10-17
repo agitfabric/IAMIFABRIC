@@ -19871,6 +19871,74 @@
         ]
       },
       {
+        "name": "GOLD_TABLE_COUNT",
+        "sourceLineageTag": "[dbo].[GOLD_TABLE_COUNT]",
+        "columns": [
+          {
+            "name": "TableName",
+            "dataType": "string",
+            "sourceColumn": "TableName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TableName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "countRow",
+            "dataType": "int64",
+            "sourceColumn": "countRow",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "countRow",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lastDate",
+            "dataType": "dateTime",
+            "sourceColumn": "lastDate",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "lastDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "GOLD_TABLE_COUNT",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
         "name": "GroupLine(1)",
         "sourceLineageTag": "[dbo].[GroupLine]",
         "columns": [
@@ -84441,11 +84509,11 @@
             ]
           },
           {
-            "name": "data_deviceNo",
+            "name": "data_operations_parts_partItemNo",
             "dataType": "string",
-            "sourceColumn": "data_deviceNo",
+            "sourceColumn": "data_operations_parts_partItemNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_deviceNo",
+            "sourceLineageTag": "data_operations_parts_partItemNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84455,11 +84523,11 @@
             ]
           },
           {
-            "name": "data_salesOrderNo",
+            "name": "pageSize",
             "dataType": "string",
-            "sourceColumn": "data_salesOrderNo",
+            "sourceColumn": "pageSize",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_salesOrderNo",
+            "sourceLineageTag": "pageSize",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84469,11 +84537,11 @@
             ]
           },
           {
-            "name": "data_programName",
+            "name": "returned",
             "dataType": "string",
-            "sourceColumn": "data_programName",
+            "sourceColumn": "returned",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_programName",
+            "sourceLineageTag": "returned",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84483,40 +84551,30 @@
             ]
           },
           {
-            "name": "data_priority",
-            "dataType": "string",
-            "sourceColumn": "data_priority",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_priority",
-            "summarizeBy": "none",
+            "name": "data_operations_parts_unitPricePart",
+            "dataType": "double",
+            "sourceColumn": "data_operations_parts_unitPricePart",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "data_operations_parts_unitPricePart",
+            "summarizeBy": "sum",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_notifyMethod",
-            "dataType": "string",
-            "sourceColumn": "data_notifyMethod",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_notifyMethod",
-            "summarizeBy": "none",
-            "annotations": [
+              },
               {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
               }
             ]
           },
           {
-            "name": "data_usage",
+            "name": "data_operations_parts_qty",
             "dataType": "int64",
-            "sourceColumn": "data_usage",
+            "sourceColumn": "data_operations_parts_qty",
             "formatString": "0",
             "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_usage",
+            "sourceLineageTag": "data_operations_parts_qty",
             "summarizeBy": "sum",
             "annotations": [
               {
@@ -84526,12 +84584,26 @@
             ]
           },
           {
-            "name": "data_lastUsage",
+            "name": "data_operations_parts_uOM",
+            "dataType": "string",
+            "sourceColumn": "data_operations_parts_uOM",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_operations_parts_uOM",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_operations_parts_flagDeletion",
             "dataType": "int64",
-            "sourceColumn": "data_lastUsage",
+            "sourceColumn": "data_operations_parts_flagDeletion",
             "formatString": "0",
             "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_lastUsage",
+            "sourceLineageTag": "data_operations_parts_flagDeletion",
             "summarizeBy": "sum",
             "annotations": [
               {
@@ -84541,11 +84613,11 @@
             ]
           },
           {
-            "name": "data_customerAccount",
+            "name": "data_operations_consumables",
             "dataType": "string",
-            "sourceColumn": "data_customerAccount",
+            "sourceColumn": "data_operations_consumables",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_customerAccount",
+            "sourceLineageTag": "data_operations_consumables",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84555,11 +84627,11 @@
             ]
           },
           {
-            "name": "data_email",
+            "name": "data_operations_parts",
             "dataType": "string",
-            "sourceColumn": "data_email",
+            "sourceColumn": "data_operations_parts",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_email",
+            "sourceLineageTag": "data_operations_parts",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84569,11 +84641,11 @@
             ]
           },
           {
-            "name": "data_address",
+            "name": "data_operations_consumables_consumableItemNo",
             "dataType": "string",
-            "sourceColumn": "data_address",
+            "sourceColumn": "data_operations_consumables_consumableItemNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_address",
+            "sourceLineageTag": "data_operations_consumables_consumableItemNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84583,11 +84655,11 @@
             ]
           },
           {
-            "name": "data_stnk",
+            "name": "data_operations_consumables_consumableDesc",
             "dataType": "string",
-            "sourceColumn": "data_stnk",
+            "sourceColumn": "data_operations_consumables_consumableDesc",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_stnk",
+            "sourceLineageTag": "data_operations_consumables_consumableDesc",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84597,11 +84669,26 @@
             ]
           },
           {
-            "name": "data_bukuService",
+            "name": "data_operations_consumables_qty",
+            "dataType": "int64",
+            "sourceColumn": "data_operations_consumables_qty",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "data_operations_consumables_qty",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_operations_consumables_uOM",
             "dataType": "string",
-            "sourceColumn": "data_bukuService",
+            "sourceColumn": "data_operations_consumables_uOM",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_bukuService",
+            "sourceLineageTag": "data_operations_consumables_uOM",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84611,11 +84698,26 @@
             ]
           },
           {
-            "name": "data_gantiPart",
+            "name": "data_operations_consumables_flagDeletion",
+            "dataType": "int64",
+            "sourceColumn": "data_operations_consumables_flagDeletion",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "data_operations_consumables_flagDeletion",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_operations_parts_partNo",
             "dataType": "string",
-            "sourceColumn": "data_gantiPart",
+            "sourceColumn": "data_operations_parts_partNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_gantiPart",
+            "sourceLineageTag": "data_operations_parts_partNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84625,11 +84727,11 @@
             ]
           },
           {
-            "name": "data_symptomps",
+            "name": "data_operations_parts_partDesc",
             "dataType": "string",
-            "sourceColumn": "data_symptomps",
+            "sourceColumn": "data_operations_parts_partDesc",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_symptomps",
+            "sourceLineageTag": "data_operations_parts_partDesc",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84639,11 +84741,11 @@
             ]
           },
           {
-            "name": "data_cause",
+            "name": "data_operations_operationNo",
             "dataType": "string",
-            "sourceColumn": "data_cause",
+            "sourceColumn": "data_operations_operationNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_cause",
+            "sourceLineageTag": "data_operations_operationNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84653,11 +84755,11 @@
             ]
           },
           {
-            "name": "data_solution",
+            "name": "data_operations_operationDesc",
             "dataType": "string",
-            "sourceColumn": "data_solution",
+            "sourceColumn": "data_operations_operationDesc",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_solution",
+            "sourceLineageTag": "data_operations_operationDesc",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84667,11 +84769,11 @@
             ]
           },
           {
-            "name": "data_warranty",
+            "name": "data_operations_category",
             "dataType": "string",
-            "sourceColumn": "data_warranty",
+            "sourceColumn": "data_operations_category",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_warranty",
+            "sourceLineageTag": "data_operations_category",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -84681,12 +84783,31 @@
             ]
           },
           {
-            "name": "data_comments",
-            "dataType": "string",
-            "sourceColumn": "data_comments",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_comments",
-            "summarizeBy": "none",
+            "name": "data_hour",
+            "dataType": "double",
+            "sourceColumn": "data_hour",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "data_hour",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "data_operations_flagDeletion",
+            "dataType": "int64",
+            "sourceColumn": "data_operations_flagDeletion",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "data_operations_flagDeletion",
+            "summarizeBy": "sum",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -84695,333 +84816,11 @@
             ]
           },
           {
-            "name": "data_invoiceNo",
+            "name": "data_operations_consumables_consumableNo",
             "dataType": "string",
-            "sourceColumn": "data_invoiceNo",
+            "sourceColumn": "data_operations_consumables_consumableNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_invoiceNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_jobAllocationEndDate",
-            "dataType": "string",
-            "sourceColumn": "data_jobAllocationEndDate",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_jobAllocationEndDate",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_jobAllocationEndTime",
-            "dataType": "string",
-            "sourceColumn": "data_jobAllocationEndTime",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_jobAllocationEndTime",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_jobAllocationStartDate",
-            "dataType": "string",
-            "sourceColumn": "data_jobAllocationStartDate",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_jobAllocationStartDate",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_jobAllocationStartTime",
-            "dataType": "string",
-            "sourceColumn": "data_jobAllocationStartTime",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_jobAllocationStartTime",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_lineProperties",
-            "dataType": "string",
-            "sourceColumn": "data_lineProperties",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_lineProperties",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_mobilePhone",
-            "dataType": "string",
-            "sourceColumn": "data_mobilePhone",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_mobilePhone",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_serviceAdvisor",
-            "dataType": "string",
-            "sourceColumn": "data_serviceAdvisor",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_serviceAdvisor",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_resourceNo",
-            "dataType": "string",
-            "sourceColumn": "data_resourceNo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_resourceNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_nameMechanic",
-            "dataType": "string",
-            "sourceColumn": "data_nameMechanic",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_nameMechanic",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_personInCharge",
-            "dataType": "string",
-            "sourceColumn": "data_personInCharge",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_personInCharge",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_name",
-            "dataType": "string",
-            "sourceColumn": "data_name",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_name",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_phone",
-            "dataType": "string",
-            "sourceColumn": "data_phone",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_phone",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_postalAddress",
-            "dataType": "string",
-            "sourceColumn": "data_postalAddress",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_postalAddress",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_primaryResource",
-            "dataType": "string",
-            "sourceColumn": "data_primaryResource",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_primaryResource",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_primaryResourceGroup",
-            "dataType": "string",
-            "sourceColumn": "data_primaryResourceGroup",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_primaryResourceGroup",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_reworkCode",
-            "dataType": "string",
-            "sourceColumn": "data_reworkCode",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_reworkCode",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_reworkOrder",
-            "dataType": "string",
-            "sourceColumn": "data_reworkOrder",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_reworkOrder",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_telephone",
-            "dataType": "string",
-            "sourceColumn": "data_telephone",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_telephone",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_timestamp",
-            "dataType": "string",
-            "sourceColumn": "data_timestamp",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_timestamp",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_transactionNo",
-            "dataType": "string",
-            "sourceColumn": "data_transactionNo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_transactionNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_workOrderDateFrom",
-            "dataType": "string",
-            "sourceColumn": "data_workOrderDateFrom",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_workOrderDateFrom",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_workOrderDateStartTime",
-            "dataType": "string",
-            "sourceColumn": "data_workOrderDateStartTime",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_workOrderDateStartTime",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_workOrderDateTo",
-            "dataType": "string",
-            "sourceColumn": "data_workOrderDateTo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_workOrderDateTo",
+            "sourceLineageTag": "data_operations_consumables_consumableNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85119,11 +84918,11 @@
             ]
           },
           {
-            "name": "data_operations_operationNo",
+            "name": "data_telephone",
             "dataType": "string",
-            "sourceColumn": "data_operations_operationNo",
+            "sourceColumn": "data_telephone",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_operationNo",
+            "sourceLineageTag": "data_telephone",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85133,11 +84932,11 @@
             ]
           },
           {
-            "name": "data_operations_operationDesc",
+            "name": "data_timestamp",
             "dataType": "string",
-            "sourceColumn": "data_operations_operationDesc",
+            "sourceColumn": "data_timestamp",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_operationDesc",
+            "sourceLineageTag": "data_timestamp",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85147,11 +84946,11 @@
             ]
           },
           {
-            "name": "data_operations_category",
+            "name": "data_transactionNo",
             "dataType": "string",
-            "sourceColumn": "data_operations_category",
+            "sourceColumn": "data_transactionNo",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_category",
+            "sourceLineageTag": "data_transactionNo",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85161,30 +84960,390 @@
             ]
           },
           {
-            "name": "data_hour",
-            "dataType": "double",
-            "sourceColumn": "data_hour",
-            "sourceProviderType": "float",
-            "sourceLineageTag": "data_hour",
-            "summarizeBy": "sum",
+            "name": "data_workOrderDateFrom",
+            "dataType": "string",
+            "sourceColumn": "data_workOrderDateFrom",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_workOrderDateFrom",
+            "summarizeBy": "none",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ]
           },
           {
-            "name": "data_operations_flagDeletion",
+            "name": "data_workOrderDateStartTime",
+            "dataType": "string",
+            "sourceColumn": "data_workOrderDateStartTime",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_workOrderDateStartTime",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_workOrderDateTo",
+            "dataType": "string",
+            "sourceColumn": "data_workOrderDateTo",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_workOrderDateTo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_phone",
+            "dataType": "string",
+            "sourceColumn": "data_phone",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_phone",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_postalAddress",
+            "dataType": "string",
+            "sourceColumn": "data_postalAddress",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_postalAddress",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_primaryResource",
+            "dataType": "string",
+            "sourceColumn": "data_primaryResource",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_primaryResource",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_primaryResourceGroup",
+            "dataType": "string",
+            "sourceColumn": "data_primaryResourceGroup",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_primaryResourceGroup",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_reworkCode",
+            "dataType": "string",
+            "sourceColumn": "data_reworkCode",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_reworkCode",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_reworkOrder",
+            "dataType": "string",
+            "sourceColumn": "data_reworkOrder",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_reworkOrder",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_mobilePhone",
+            "dataType": "string",
+            "sourceColumn": "data_mobilePhone",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_mobilePhone",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_serviceAdvisor",
+            "dataType": "string",
+            "sourceColumn": "data_serviceAdvisor",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_serviceAdvisor",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_resourceNo",
+            "dataType": "string",
+            "sourceColumn": "data_resourceNo",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_resourceNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_nameMechanic",
+            "dataType": "string",
+            "sourceColumn": "data_nameMechanic",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_nameMechanic",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_personInCharge",
+            "dataType": "string",
+            "sourceColumn": "data_personInCharge",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_personInCharge",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_name",
+            "dataType": "string",
+            "sourceColumn": "data_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_invoiceNo",
+            "dataType": "string",
+            "sourceColumn": "data_invoiceNo",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_invoiceNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_jobAllocationEndDate",
+            "dataType": "string",
+            "sourceColumn": "data_jobAllocationEndDate",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_jobAllocationEndDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_jobAllocationEndTime",
+            "dataType": "string",
+            "sourceColumn": "data_jobAllocationEndTime",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_jobAllocationEndTime",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_jobAllocationStartDate",
+            "dataType": "string",
+            "sourceColumn": "data_jobAllocationStartDate",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_jobAllocationStartDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_jobAllocationStartTime",
+            "dataType": "string",
+            "sourceColumn": "data_jobAllocationStartTime",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_jobAllocationStartTime",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_lineProperties",
+            "dataType": "string",
+            "sourceColumn": "data_lineProperties",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_lineProperties",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_gantiPart",
+            "dataType": "string",
+            "sourceColumn": "data_gantiPart",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_gantiPart",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_symptomps",
+            "dataType": "string",
+            "sourceColumn": "data_symptomps",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_symptomps",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_cause",
+            "dataType": "string",
+            "sourceColumn": "data_cause",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_cause",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_solution",
+            "dataType": "string",
+            "sourceColumn": "data_solution",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_solution",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_warranty",
+            "dataType": "string",
+            "sourceColumn": "data_warranty",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_warranty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_comments",
+            "dataType": "string",
+            "sourceColumn": "data_comments",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_comments",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_lastUsage",
             "dataType": "int64",
-            "sourceColumn": "data_operations_flagDeletion",
+            "sourceColumn": "data_lastUsage",
             "formatString": "0",
             "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_operations_flagDeletion",
+            "sourceLineageTag": "data_lastUsage",
             "summarizeBy": "sum",
             "annotations": [
               {
@@ -85194,11 +85353,11 @@
             ]
           },
           {
-            "name": "data_operations_consumables_consumableNo",
+            "name": "data_customerAccount",
             "dataType": "string",
-            "sourceColumn": "data_operations_consumables_consumableNo",
+            "sourceColumn": "data_customerAccount",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_consumables_consumableNo",
+            "sourceLineageTag": "data_customerAccount",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85208,11 +85367,11 @@
             ]
           },
           {
-            "name": "data_operations_consumables_consumableDesc",
+            "name": "data_email",
             "dataType": "string",
-            "sourceColumn": "data_operations_consumables_consumableDesc",
+            "sourceColumn": "data_email",
             "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_consumables_consumableDesc",
+            "sourceLineageTag": "data_email",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -85222,220 +85381,129 @@
             ]
           },
           {
-            "name": "data_operations_consumables_qty",
+            "name": "data_address",
+            "dataType": "string",
+            "sourceColumn": "data_address",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_address",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_stnk",
+            "dataType": "string",
+            "sourceColumn": "data_stnk",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_stnk",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_bukuService",
+            "dataType": "string",
+            "sourceColumn": "data_bukuService",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_bukuService",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_deviceNo",
+            "dataType": "string",
+            "sourceColumn": "data_deviceNo",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_deviceNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_salesOrderNo",
+            "dataType": "string",
+            "sourceColumn": "data_salesOrderNo",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_salesOrderNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_programName",
+            "dataType": "string",
+            "sourceColumn": "data_programName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_programName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_priority",
+            "dataType": "string",
+            "sourceColumn": "data_priority",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_priority",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_notifyMethod",
+            "dataType": "string",
+            "sourceColumn": "data_notifyMethod",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "data_notifyMethod",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "data_usage",
             "dataType": "int64",
-            "sourceColumn": "data_operations_consumables_qty",
+            "sourceColumn": "data_usage",
             "formatString": "0",
             "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_operations_consumables_qty",
+            "sourceLineageTag": "data_usage",
             "summarizeBy": "sum",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_consumables_uOM",
-            "dataType": "string",
-            "sourceColumn": "data_operations_consumables_uOM",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_consumables_uOM",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_consumables_flagDeletion",
-            "dataType": "int64",
-            "sourceColumn": "data_operations_consumables_flagDeletion",
-            "formatString": "0",
-            "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_operations_consumables_flagDeletion",
-            "summarizeBy": "sum",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_partNo",
-            "dataType": "string",
-            "sourceColumn": "data_operations_parts_partNo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_parts_partNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_partDesc",
-            "dataType": "string",
-            "sourceColumn": "data_operations_parts_partDesc",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_parts_partDesc",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_qty",
-            "dataType": "int64",
-            "sourceColumn": "data_operations_parts_qty",
-            "formatString": "0",
-            "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_operations_parts_qty",
-            "summarizeBy": "sum",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_uOM",
-            "dataType": "string",
-            "sourceColumn": "data_operations_parts_uOM",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_parts_uOM",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_flagDeletion",
-            "dataType": "int64",
-            "sourceColumn": "data_operations_parts_flagDeletion",
-            "formatString": "0",
-            "sourceProviderType": "bigint",
-            "sourceLineageTag": "data_operations_parts_flagDeletion",
-            "summarizeBy": "sum",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_consumables",
-            "dataType": "string",
-            "sourceColumn": "data_operations_consumables",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_consumables",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts",
-            "dataType": "string",
-            "sourceColumn": "data_operations_parts",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_parts",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_consumables_consumableItemNo",
-            "dataType": "string",
-            "sourceColumn": "data_operations_consumables_consumableItemNo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_consumables_consumableItemNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_partItemNo",
-            "dataType": "string",
-            "sourceColumn": "data_operations_parts_partItemNo",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "data_operations_parts_partItemNo",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "pageSize",
-            "dataType": "string",
-            "sourceColumn": "pageSize",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "pageSize",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "returned",
-            "dataType": "string",
-            "sourceColumn": "returned",
-            "sourceProviderType": "varchar",
-            "sourceLineageTag": "returned",
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "data_operations_parts_unitPricePart",
-            "dataType": "double",
-            "sourceColumn": "data_operations_parts_unitPricePart",
-            "sourceProviderType": "float",
-            "sourceLineageTag": "data_operations_parts_unitPricePart",
-            "summarizeBy": "sum",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ]
           }
